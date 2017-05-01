@@ -1,9 +1,13 @@
-function getTabs() {
-  browser.tabs.query({}, logTabs);
+function showUrls(tabs) {
+  for (let tab of tabs) {
+    // tab.url requires the `tabs` permission
+    console.log(tab.url);
+  }
 }
 
-function logTabs(tabs) {
-  console.log(tabs);
+function onError(error) {
+  console.log(`Error: ${error}`);
 }
 
-getTabs();
+var querying = browser.tabs.query({});
+querying.then(showUrls, onError);
