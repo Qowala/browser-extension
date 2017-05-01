@@ -27,7 +27,23 @@ gettingStoredStats.then(results => {
 
     const listItem = document.createElement("li");
     const hostname = sortedHostnames[i];
-    listItem.textContent = `${hostname}: ${hostNavigationStats[today][hostname]} second(s)`;
+
+    const elapsedTime = hostNavigationStats[today][hostname];
+
+    if ((elapsedTime / 60 / 60) >= 1) {
+      var displayTime = Math.floor(elapsedTime / 60 / 60);
+      var displayUnit = "hour(s)";
+    }
+    else if ((elapsedTime / 60) >= 1) {
+      var displayTime = Math.floor(elapsedTime / 60);
+      var displayUnit = "minute(s)";
+    }
+    else {
+      var displayTime = elapsedTime;
+      var displayUnit = "second(s)";
+    }
+
+    listItem.textContent = `${hostname}: ${displayTime} ${displayUnit}`;
     listEl.appendChild(listItem);
   }
 });
