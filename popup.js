@@ -26,7 +26,7 @@ gettingStoredStats.then(results => {
 
     const listItem = document.createElement("li");
     const hostname = sortedHostnames[i];
-    listItem.textContent = `${hostname}: ${hostNavigationStats[hostname]} visit(s)`;
+    listItem.textContent = `${hostname}: ${hostNavigationStats[hostname]} second(s)`;
     listEl.appendChild(listItem);
   }
 });

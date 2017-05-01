@@ -1,16 +1,22 @@
 function showUrls(tabs) {
+  let urlsObject = {};
   for (let tab of tabs) {
     // tab.url requires the `tabs` permission
-    console.log(tab.url);
+    //console.log(tab.url);
+    var url = new URL(tab.url);
+    urlsObject[url.hostname] = true;
   }
+  return urlsObject;
 }
 
 function onError(error) {
   console.log(`Error: ${error}`);
 }
 
-var querying = browser.tabs.query({});
-querying.then(showUrls, onError);
+function getTabs() {
+  var querying = browser.tabs.query({});
+  return querying.then(showUrls, onError);
+}
 
 // Load existent stats with the storage API.
 var gettingStoredStats = browser.storage.local.get("hostNavigationStats");
@@ -24,21 +30,22 @@ gettingStoredStats.then(results => {
 
   const {hostNavigationStats} = results;
 
-  // Monitor completed navigation events and update
-  // stats accordingly.
-  browser.webNavigation.onCompleted.addListener(evt => {
-    // Filter out any sub-frame related navigation event
-    if (evt.frameId !== 0) {
-      return;
-    }
+  var intervalID = window.setInterval(measureTime, 1000);
 
-    const url = new URL(evt.url);
+  function measureTime() {
+    getTabs().then(function(urlsObject) {
 
-    hostNavigationStats[url.hostname] = hostNavigationStats[url.hostname] || 0;
-    hostNavigationStats[url.hostname]++;
+      console.log('urlsObject: ', urlsObject);
+      urlsArray = Object.keys(urlsObject);
+      console.log('urlsArray: ', urlsArray);
+      for (var i = 0; i < urlsArray.length; i++) {
 
-    // Persist the updated stats.
-    browser.storage.local.set(results);
-  }, {
-    url: [{schemes: ["http", "https"]}]});
+        hostNavigationStats[urlsArray[i]] = hostNavigationStats[urlsArray[i]] || 0;
+        hostNavigationStats[urlsArray[i]]++;
+      }
+
+      // Persist the updated stats.
+      browser.storage.local.set(results);
+    });
+  }
 });
