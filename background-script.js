@@ -18,6 +18,11 @@ function getTabs() {
   return querying.then(showUrls, onError);
 }
 
+function getActiveTabs() {
+  var querying = browser.tabs.query({active: true});
+  return querying.then(showUrls, onError);
+}
+
 // Load existent stats with the storage API.
 var gettingStoredStats = browser.storage.local.get("hostNavigationStats");
 gettingStoredStats.then(results => {
@@ -33,7 +38,7 @@ gettingStoredStats.then(results => {
   var intervalID = window.setInterval(measureTime, 1000);
 
   function measureTime() {
-    getTabs().then(function(urlsObject) {
+    getActiveTabs().then(function(urlsObject) {
 
       console.log('urlsObject: ', urlsObject);
       urlsArray = Object.keys(urlsObject);
