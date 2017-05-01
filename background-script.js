@@ -39,9 +39,13 @@ gettingStoredStats.then(results => {
       urlsArray = Object.keys(urlsObject);
       console.log('urlsArray: ', urlsArray);
       for (var i = 0; i < urlsArray.length; i++) {
+        const today = new Date(new Date().setHours(0, 0, 0, 0));
+        if (!hostNavigationStats[today]) {
+          hostNavigationStats[today] = {};
+        }
 
-        hostNavigationStats[urlsArray[i]] = hostNavigationStats[urlsArray[i]] || 0;
-        hostNavigationStats[urlsArray[i]]++;
+        hostNavigationStats[today][urlsArray[i]] = hostNavigationStats[today][urlsArray[i]] || 0;
+        hostNavigationStats[today][urlsArray[i]]++;
       }
 
       // Persist the updated stats.

@@ -6,7 +6,8 @@ gettingStoredStats.then(results => {
   }
 
   const {hostNavigationStats} = results;
-  const sortedHostnames = Object.keys(hostNavigationStats).sort((a, b) => {
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const sortedHostnames = Object.keys(hostNavigationStats[today]).sort((a, b) => {
     return hostNavigationStats[a] <= hostNavigationStats[b];
   });
 
@@ -26,7 +27,7 @@ gettingStoredStats.then(results => {
 
     const listItem = document.createElement("li");
     const hostname = sortedHostnames[i];
-    listItem.textContent = `${hostname}: ${hostNavigationStats[hostname]} second(s)`;
+    listItem.textContent = `${hostname}: ${hostNavigationStats[today][hostname]} second(s)`;
     listEl.appendChild(listItem);
   }
 });
