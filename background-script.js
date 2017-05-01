@@ -4,7 +4,9 @@ function showUrls(tabs) {
     // tab.url requires the `tabs` permission
     //console.log(tab.url);
     var url = new URL(tab.url);
-    urlsObject[url.hostname] = true;
+    if (url.hostname !== "") {
+      urlsObject[url.hostname] = true;
+    }
   }
   return urlsObject;
 }
