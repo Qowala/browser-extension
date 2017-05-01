@@ -3,14 +3,16 @@
 
   "name": "Qowala",
   "description": "This extension helps you to overcome your Web addiction",
-  "version": "1.0",
+  "version": "0.1.0",
 
   "browser_action": {
-    "default_icon": "icon.png",
-    "default_popup": "popup.html"
+    "default_icon": "icon.png"
   },
   "permissions": [
     "activeTab",
-    "https://ajax.googleapis.com/"
-  ]
+    "tabs"
+  ],
+  "background": {
+    "scripts": ["background-script.js"]
+  }
 }
