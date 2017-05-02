@@ -16,6 +16,10 @@ gettingStoredStats.then(results => {
   }
 
   let listEl = document.querySelector("ul");
+  let timeSpentEl = document.querySelector(".time-spent");
+  let networkEl = document.querySelector(".network");
+  let dateEl = document.querySelector(".date");
+
   while(listEl.firstChild)
     listEl.removeChild(listEl.firstChild);
 
@@ -45,5 +49,8 @@ gettingStoredStats.then(results => {
 
     listItem.textContent = `${hostname}: ${displayTime} ${displayUnit}`;
     listEl.appendChild(listItem);
+    timeSpentEl.textContent = `${displayTime} ${displayUnit}`;
+    networkEl.textContent = `${hostname}`;
+    dateEl.textContent = `Today`;
   }
 });
