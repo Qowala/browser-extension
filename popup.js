@@ -20,18 +20,10 @@ gettingStoredStats.then(results => {
   let networkEl = document.querySelector(".network");
   let dateEl = document.querySelector(".date");
 
-  while(listEl.firstChild)
-    listEl.removeChild(listEl.firstChild);
+  // Setup listener for dropdown
+  networkEl.onchange=updateDisplayedNetwork;
 
-  const MAX_ITEMS = 5;
-  for (let i=0; i < sortedHostnames.length; i++) {
-    if (i >= MAX_ITEMS) {
-      break;
-    }
-
-    const listItem = document.createElement("li");
-    const hostname = sortedHostnames[i];
-
+  function estimateTime(hostname) {
     const elapsedTime = hostNavigationStats[today][hostname];
 
     if ((elapsedTime / 60 / 60) >= 1) {
@@ -47,10 +39,29 @@ gettingStoredStats.then(results => {
       var displayUnit = "second(s)";
     }
 
-    listItem.textContent = `${hostname}: ${displayTime} ${displayUnit}`;
-    listEl.appendChild(listItem);
     timeSpentEl.textContent = `${displayTime} ${displayUnit}`;
-    networkEl.textContent = `${hostname}`;
+  }
+
+  function updateDisplayedNetwork(event) {
+    // You can use “this” to refer to the selected element.
+    if(!event.target.value) alert('Please Select One');
+    else estimateTime(event.target.value);
+  }
+
+  while(networkEl.firstChild)
+    networkEl.removeChild(networkEl.firstChild);
+
+  const MAX_ITEMS = 5;
+  for (let i=0; i < sortedHostnames.length; i++) {
+    if (i >= MAX_ITEMS) {
+      break;
+    }
+
+    const networkItem = document.createElement("option");
+    const hostname = sortedHostnames[i];
+
+    networkItem.textContent = `${hostname}`;
+    networkEl.appendChild(networkItem);
     dateEl.textContent = `Today`;
   }
 });

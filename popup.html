@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+  <meta charset="UTF-8">
   <head>
      <style>
       @font-face {
@@ -44,6 +45,8 @@
         text-transform: uppercase;
       }
       .network, .date {
+        font-family: "robotobold", "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+        font-size: 100%;
         color: #FFF;
       }
       .network {
@@ -51,6 +54,16 @@
       }
       .date {
         margin-left: 15px;
+      }
+      .parameters__dropdown {
+        border: 0 !important;  /*REMOVES BORDER*/
+        -webkit-appearance: none;  /*REMOVES DEFAULT CHROME & SAFARI STYLE*/
+        -moz-appearance: none;  /*REMOVES DEFAULT FIREFOX STYLE*/
+        appearance: none;
+        background-color: #21A868;
+        cursor: pointer;
+        color: #FFF;
+        display: inline;
       }
     </style>
   </head>
@@ -63,11 +76,8 @@
     <h3>You've spent...</h3>
     <div class="time-spent"></div>
     <div class="parameters">
-      On <span class="network"></span> <span class="date"></span>
+      On <select class="parameters__dropdown network"></select> <span class="date"></span>
     </div>
-    <ul>
-      <li>No data collected yet...</li>
-    </ul>
     <script src="popup.js"></script>
   </body>
 </html>
