@@ -1,3 +1,16 @@
+function getHostname(tabs) {
+  var url = new URL(tabs[0].url);
+  return url.hostname;
+}
+
+function onError(error) {
+  console.log(`Error: ${error}`);
+}
+
+function getCurrentTab() {
+  var querying = browser.tabs.query({active: true, currentWindow: true});
+  return querying.then(getHostname, onError);
+}
 // Get the saved stats and render the data in the popup window.
 var gettingStoredStats = browser.storage.local.get("hostNavigationStats");
 gettingStoredStats.then(results => {
@@ -64,4 +77,9 @@ gettingStoredStats.then(results => {
     networkEl.appendChild(networkItem);
     dateEl.textContent = `Today`;
   }
+
+  // Display time for current tab
+  getCurrentTab().then(function(hostname) {
+    estimateTime(hostname);
+  });
 });
