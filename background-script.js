@@ -1,3 +1,17 @@
+function loadJSON(callback) {
+
+    var xobj = new XMLHttpRequest();
+        xobj.overrideMimeType("application/json");
+    xobj.open('GET', 'configuration.json', true);
+    xobj.onreadystatechange = function () {
+          if (xobj.readyState == 4 && xobj.status == "200") {
+            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+            callback(xobj.responseText);
+          }
+    };
+    xobj.send(null);
+ }
+
 function showUrls(tabs) {
   let urlsObject = {};
   for (let tab of tabs) {
@@ -35,28 +49,36 @@ gettingStoredStats.then(results => {
     };
   }
 
-  const {hostNavigationStats} = results;
+  loadJSON(function(response) {
+    // Parse JSON string into object
+      var actual_JSON = JSON.parse(response);
+      const monitoringList = actual_JSON.blacklist;
 
-  var intervalID = window.setInterval(measureTime, 1000);
+      const {hostNavigationStats} = results;
 
-  function measureTime() {
-    getActiveTabs().then(function(urlsObject) {
+      var intervalID = window.setInterval(measureTime, 1000);
 
-      console.log('urlsObject: ', urlsObject);
-      urlsArray = Object.keys(urlsObject);
-      console.log('urlsArray: ', urlsArray);
-      for (var i = 0; i < urlsArray.length; i++) {
-        const today = new Date(new Date().setHours(0, 0, 0, 0));
-        if (!hostNavigationStats[today]) {
-          hostNavigationStats[today] = {};
-        }
+      function measureTime() {
+        getActiveTabs().then(function(urlsObject) {
 
-        hostNavigationStats[today][urlsArray[i]] = hostNavigationStats[today][urlsArray[i]] || 0;
-        hostNavigationStats[today][urlsArray[i]]++;
+          urlsArray = Object.keys(urlsObject);
+          for (var i = 0; i < urlsArray.length; i++) {
+            if (monitoringList.indexOf(urlsArray[i]) === -1) {
+              continue;
+            }
+
+            const today = new Date(new Date().setHours(0, 0, 0, 0));
+            if (!hostNavigationStats[today]) {
+              hostNavigationStats[today] = {};
+            }
+
+            hostNavigationStats[today][urlsArray[i]] = hostNavigationStats[today][urlsArray[i]] || 0;
+            hostNavigationStats[today][urlsArray[i]]++;
+          }
+
+          // Persist the updated stats.
+          browser.storage.local.set(results);
+        });
       }
-
-      // Persist the updated stats.
-      browser.storage.local.set(results);
-    });
-  }
+   });
 });
