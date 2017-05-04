@@ -1,0 +1,5 @@
+{
+  "blacklist": ["facebook.com",
+                "twitter.com",
+                "mastodon.qowala.org"]
+}
