@@ -7,13 +7,8 @@ function onError(error) {
   console.log(`Error: ${error}`);
 }
 
-function getCurrentTab() {
-  var querying = browser.tabs.query({active: true, currentWindow: true});
-  return querying.then(getHostname, onError);
-}
 // Get the saved stats and render the data in the popup window.
-var gettingStoredStats = browser.storage.local.get("hostNavigationStats");
-gettingStoredStats.then(results => {
+chrome.storage.local.get("hostNavigationStats", function(results) {
   if (!results.hostNavigationStats) {
     return;
   }
@@ -89,7 +84,8 @@ gettingStoredStats.then(results => {
     networkEl.removeChild(networkEl.firstChild);
 
   // Get hostname of current tab
-  getCurrentTab().then(function(currentHostname) {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    const currentHostname = getHostname(tabs);
 
     // Display five most visited websites
     const MAX_ITEMS = 5;

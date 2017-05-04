@@ -29,19 +29,8 @@ function onError(error) {
   console.log(`Error: ${error}`);
 }
 
-function getTabs() {
-  var querying = browser.tabs.query({});
-  return querying.then(showUrls, onError);
-}
-
-function getActiveTabs() {
-  var querying = browser.tabs.query({active: true});
-  return querying.then(showUrls, onError);
-}
-
 // Load existent stats with the storage API.
-var gettingStoredStats = browser.storage.local.get("hostNavigationStats");
-gettingStoredStats.then(results => {
+chrome.storage.local.get("hostNavigationStats", function(results) {
   // Initialize the saved stats if not yet initialized.
   if (!results.hostNavigationStats) {
     results = {
@@ -59,7 +48,8 @@ gettingStoredStats.then(results => {
       var intervalID = window.setInterval(measureTime, 1000);
 
       function measureTime() {
-        getActiveTabs().then(function(urlsObject) {
+        chrome.tabs.query({active: true}, function(tabs) {
+          const urlsObject = showUrls(tabs);
 
           urlsArray = Object.keys(urlsObject);
           for (var i = 0; i < urlsArray.length; i++) {
@@ -77,7 +67,7 @@ gettingStoredStats.then(results => {
           }
 
           // Persist the updated stats.
-          browser.storage.local.set(results);
+          chrome.storage.local.set(results);
         });
       }
    });
