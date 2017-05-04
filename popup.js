@@ -24,7 +24,7 @@ gettingStoredStats.then(results => {
     'Yesterday': new Date(new Date(new Date().setHours(0, 0, 0, 0)).getDate() - 1),
   };
   const sortedHostnames = Object.keys(hostNavigationStats[dates['Today']]).sort((a, b) => {
-    return hostNavigationStats[a] <= hostNavigationStats[b];
+    return hostNavigationStats[dates['Today']][a] <= hostNavigationStats[dates['Today']][b];
   });
 
   if (sortedHostnames.length === 0) {
@@ -45,7 +45,7 @@ gettingStoredStats.then(results => {
   function estimateTime() {
     if (typeof hostNavigationStats[dates[displayDate]] == "undefined" ||
         typeof hostNavigationStats[dates[displayDate]][displayHostname] == "undefined") {
-      timeSpentEl.textContent = `No data yet`;
+      timeSpentEl.textContent = `No data`;
       return;
     }
 
