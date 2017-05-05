@@ -16,7 +16,7 @@ chrome.storage.local.get("hostNavigationStats", function(results) {
   const {hostNavigationStats} = results;
   const dates = {
     'Today': new Date(new Date().setHours(0, 0, 0, 0)),
-    'Yesterday': new Date(new Date(new Date().setHours(0, 0, 0, 0)).getDate() - 1),
+    'Yesterday': new Date(new Date(new Date().setDate(new Date().getDate()- 1)).setHours(0, 0, 0, 0)),
   };
   const sortedHostnames = Object.keys(hostNavigationStats[dates['Today']]).sort((a, b) => {
     return hostNavigationStats[dates['Today']][a] <= hostNavigationStats[dates['Today']][b];
