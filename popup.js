@@ -69,15 +69,20 @@ chrome.storage.local.get("hostNavigationStats", function(results) {
 
       if ((elapsedTime / 60 / 60) >= 1) {
         var displayTime = Math.floor(elapsedTime / 60 / 60);
-        var displayUnit = "hour(s)";
+        var displayUnit = "hour";
       }
       else if ((elapsedTime / 60) >= 1) {
         var displayTime = Math.floor(elapsedTime / 60);
-        var displayUnit = "minute(s)";
+        var displayUnit = "minute";
       }
       else {
         var displayTime = elapsedTime;
-        var displayUnit = "second(s)";
+        var displayUnit = "second";
+      }
+
+      // Display plural
+      if (elapsedTime > 1) {
+        displayUnit = displayUnit + 's';
       }
 
       timeSpentEl.textContent = `${displayTime} ${displayUnit}`;
