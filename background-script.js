@@ -10,7 +10,7 @@ function loadJSON(callback) {
           }
     };
     xobj.send(null);
- }
+}
 
 function showUrls(tabs) {
   let urlsObject = {};
