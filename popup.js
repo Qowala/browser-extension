@@ -26,6 +26,10 @@ chrome.storage.local.get("hostNavigationStats", function(results) {
   if (!results.hostNavigationStats) {
     return;
   }
+  // Return if the stats object is empty
+  if (Object.keys(results.hostNavigationStats).length === 0 && results.hostNavigationStats.constructor === Object) {
+    return;
+  }
 
   loadJSON(function(response) {
     // Parse JSON string into object
@@ -134,10 +138,8 @@ chrome.storage.local.get("hostNavigationStats", function(results) {
       // Display the spent time for current tab
       displayHostname = currentHostname;
       // Display if website is tracked or not
-      if (monitoringList.indexOf(displayHostname) === -1) {
-        nonMeasureDisplayEl.style.display = "block";
-      }
-      else {
+      if (monitoringList.indexOf(displayHostname) >= 0) {
+        nonMeasureDisplayEl.style.display = "none";
         estimateTime();
         measureDisplayEl.style.display = "block";
       }
