@@ -10,6 +10,7 @@
         font-style: normal;
       }
       body {
+        min-width: 240px;
         font-family: "robotobold", "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
         font-size: 100%;
         color: #6FCF97;
@@ -71,6 +72,13 @@
         color: #FFF;
         display: inline;
       }
+      .parameters__dropdown {
+        background: url('arrow-down.png');
+        background-size: 13px;
+        background-repeat: no-repeat;
+        background-position: left 50%;
+        padding-left: 17px;
+      }
     </style>
   </head>
   <body>
@@ -86,7 +94,8 @@
       <h3>You've spent...</h3>
       <div class="time-spent"></div>
       <div class="parameters">
-        On <select class="parameters__dropdown network"></select> <select class="parameters__dropdown date"></select>
+        On <select class="parameters__dropdown network"></select>
+        <select class="parameters__dropdown date"></select>
       </div>
     </div>
     <script src="popup.js"></script>
