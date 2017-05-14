@@ -85,7 +85,7 @@ chrome.storage.local.get("hostNavigationStats", function(results) {
       }
 
       // Display plural
-      if (elapsedTime > 1) {
+      if (displayTime > 1) {
         displayUnit = displayUnit + 's';
       }
 
