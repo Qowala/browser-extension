@@ -4,8 +4,13 @@
   "name": "Qowala",
   "description": "This extension helps you to overcome your Web addiction",
   "version": "0.1.0",
-
+  "applications": {
+    "gecko": {
+      "id": "qowala@qowala.org"
+    }
+  },
   "browser_action": {
+    "browser_style": false,
     "default_icon": "favicon.png",
     "default_popup": "popup.html"
   },
@@ -20,5 +25,9 @@
   ],
   "background": {
     "scripts": ["background-script.js"]
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
   }
 }

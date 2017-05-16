@@ -1,158 +1,125 @@
-function loadJSON(callback) {
-
-    var xobj = new XMLHttpRequest();
-        xobj.overrideMimeType("application/json");
-    xobj.open('GET', 'configuration.json', true);
-    xobj.onreadystatechange = function () {
-          if (xobj.readyState == 4 && xobj.status == "200") {
-            // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
-            callback(xobj.responseText);
-          }
-    };
-    xobj.send(null);
-}
-
-function getHostname(tabs) {
-  var url = new URL(tabs[0].url);
-  return url.hostname;
-}
-
-function onError(error) {
-  console.log(`Error: ${error}`);
-}
-
-// Get the saved stats and render the data in the popup window.
-chrome.storage.local.get("hostNavigationStats", function(results) {
-  if (!results.hostNavigationStats) {
-    return;
-  }
+browser.storage.local.get({ hostNavigationStats: {}, config: {} }, results => {
   // Return if the stats object is empty
   if (Object.keys(results.hostNavigationStats).length === 0 && results.hostNavigationStats.constructor === Object) {
-    return;
+    return
   }
 
-  loadJSON(function(response) {
-    // Parse JSON string into object
-    var actual_JSON = JSON.parse(response);
-    const monitoringList = actual_JSON.blacklist;
+  const dates = {
+    'Today': new Date(new Date().setHours(0, 0, 0, 0)),
+    'Yesterday': new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(0, 0, 0, 0)),
+  }
 
-    const {hostNavigationStats} = results;
-    const dates = {
-      'Today': new Date(new Date().setHours(0, 0, 0, 0)),
-      'Yesterday': new Date(new Date(new Date().setDate(new Date().getDate()- 1)).setHours(0, 0, 0, 0)),
-    };
-    const sortedHostnames = Object.keys(hostNavigationStats[dates['Today']]).sort((a, b) => {
-      return hostNavigationStats[dates['Today']][a] <= hostNavigationStats[dates['Today']][b];
-    });
+  const sortedHostnames = Object.keys(results.hostNavigationStats[dates['Today']]).sort((a, b) => {
+    return results.hostNavigationStats[dates['Today']][a] <= results.hostNavigationStats[dates['Today']][b]
+  })
 
-    if (sortedHostnames.length === 0) {
-      return;
+  if (sortedHostnames.length === 0) {
+    return
+  }
+
+  const listEl = document.querySelector("ul")
+  const nonMeasureDisplayEl = document.querySelector(".non-measure-display")
+  const measureDisplayEl = document.querySelector(".measure-display")
+  const timeSpentEl = document.querySelector(".time-spent")
+  const networkEl = document.querySelector(".network")
+  const dateEl = document.querySelector(".date")
+  let displayDate = 'Today'
+  let displayHostname = ''
+
+  // Setup listener for dropdown
+  networkEl.addEventListener('change', updateDisplayedHostname)
+  dateEl.addEventListener('change', updateDisplayedDate)
+
+  function estimateTime () {
+    if (typeof results.hostNavigationStats[dates[displayDate]] == "undefined" ||
+        typeof results.hostNavigationStats[dates[displayDate]][displayHostname] == "undefined") {
+      timeSpentEl.textContent = 'No data'
+      return
     }
 
-    let listEl = document.querySelector("ul");
-    let nonMeasureDisplayEl = document.querySelector(".non-measure-display");
-    let measureDisplayEl = document.querySelector(".measure-display");
-    let timeSpentEl = document.querySelector(".time-spent");
-    let networkEl = document.querySelector(".network");
-    let dateEl = document.querySelector(".date");
-    var displayDate = 'Today';
-    var displayHostname = '';
+    const elapsedTime = results.hostNavigationStats[dates[displayDate]][displayHostname]
+    let displayTime = ''
+    let displayUnit = ''
 
-    // Setup listener for dropdown
-    networkEl.onchange=updateDisplayedHostname;
-    dateEl.onchange=updateDisplayedDate;
-
-    function estimateTime() {
-      if (typeof hostNavigationStats[dates[displayDate]] == "undefined" ||
-          typeof hostNavigationStats[dates[displayDate]][displayHostname] == "undefined") {
-        timeSpentEl.textContent = `No data`;
-        return;
-      }
-
-      const elapsedTime = hostNavigationStats[dates[displayDate]][displayHostname];
-
-      if ((elapsedTime / 60 / 60) >= 1) {
-        var displayTime = Math.floor(elapsedTime / 60 / 60);
-        var displayUnit = "hour";
-      }
-      else if ((elapsedTime / 60) >= 1) {
-        var displayTime = Math.floor(elapsedTime / 60);
-        var displayUnit = "minute";
-      }
-      else {
-        var displayTime = elapsedTime;
-        var displayUnit = "second";
-      }
-
-      // Display plural
-      if (displayTime > 1) {
-        displayUnit = displayUnit + 's';
-      }
-
-      timeSpentEl.textContent = `${displayTime} ${displayUnit}`;
+    if ((elapsedTime / 60 / 60) >= 1) {
+      displayTime = Math.floor(elapsedTime / 60 / 60)
+      displayUnit = "hour"
+    }
+    else if ((elapsedTime / 60) >= 1) {
+      displayTime = Math.floor(elapsedTime / 60)
+      displayUnit = "minute"
+    }
+    else {
+      displayTime = elapsedTime
+      displayUnit = "second"
     }
 
-    function updateDisplayedHostname(event) {
-      // You can use “this” to refer to the selected element.
-      if(!event.target.value) alert('Please Select One');
-      else {
-        displayHostname = event.target.value;
-        estimateTime();
-      }
+    // Display plural
+    if (displayTime > 1) {
+      displayUnit = displayUnit + 's'
     }
 
-    function updateDisplayedDate(event) {
-      // You can use “this” to refer to the selected element.
-      if(!event.target.value) alert('Please Select One');
-      else {
-        displayDate = event.target.value;
-        estimateTime();
-      }
+    timeSpentEl.textContent = `${displayTime} ${displayUnit}`
+  }
+
+  function updateDisplayedHostname (event) {
+    // You can use “this” to refer to the selected element.
+    if(!event.target.value) alert('Please Select One')
+    else {
+      displayHostname = event.target.value
+      estimateTime()
     }
+  }
 
-    while(networkEl.firstChild)
-      networkEl.removeChild(networkEl.firstChild);
-
-    // Get hostname of current tab
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      const currentHostname = getHostname(tabs);
-
-      // Display five most visited websites
-      const MAX_ITEMS = 5;
-      for (let i=0; i < sortedHostnames.length; i++) {
-        if (i >= MAX_ITEMS) {
-          break;
-        }
-
-        const networkItem = document.createElement("option");
-        const hostname = sortedHostnames[i];
-
-        networkItem.textContent = `${hostname}`;
-        networkItem.value = `${hostname}`;
-        // Select by default the current website
-        if (sortedHostnames[i] === currentHostname) {
-          networkItem.selected = 'selected';
-        }
-        networkEl.appendChild(networkItem);
-      }
-      // Display the spent time for current tab
-      displayHostname = currentHostname;
-      // Display if website is tracked or not
-      if (monitoringList.indexOf(displayHostname) >= 0) {
-        nonMeasureDisplayEl.style.display = "none";
-        estimateTime();
-        measureDisplayEl.style.display = "block";
-      }
-    });
-
-    const datesList = Object.keys(dates);
-    for (let i=0; i < datesList.length; i++) {
-      const dateItem = document.createElement("option");
-      const date = datesList[i];
-
-      dateItem.textContent = `${date}`;
-      dateItem.value = `${date}`;
-      dateEl.appendChild(dateItem);
+  function updateDisplayedDate (event) {
+    // You can use “this” to refer to the selected element.
+    if(!event.target.value) alert('Please Select One')
+    else {
+      displayDate = event.target.value
+      estimateTime()
     }
-  });
-});
+  }
+
+  while(networkEl.firstChild)
+    networkEl.removeChild(networkEl.firstChild)
+
+  // Get hostname of current tab
+  chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+    const currentHostname = new URL(tabs[0].url).hostname
+    // Display five most visited websites
+    const MAX_ITEMS = 5
+    let i = 0
+    for (const hostname of sortedHostnames) {
+      if (i >= MAX_ITEMS) {
+        break
+      }
+
+      const networkItem = document.createElement("option")
+
+      networkItem.textContent = `${hostname}`
+      networkItem.value = `${hostname}`
+      // Select by default the current website
+      if (sortedHostnames[i] === currentHostname) {
+        networkItem.selected = 'selected'
+      }
+      networkEl.appendChild(networkItem)
+      i++
+    }
+    // Display the spent time for current tab
+    displayHostname = currentHostname
+    // Display if website is tracked or not
+    if (results.config.blacklist.indexOf(displayHostname) >= 0) {
+      nonMeasureDisplayEl.style.display = "none"
+      estimateTime()
+      measureDisplayEl.style.display = "block"
+    }
+  })
+
+  const datesList = Object.keys(dates)
+  for (const date in dates) {
+    const dateItem = document.createElement("option")
+    dateItem.textContent = `${date}`
+    dateItem.value = `${date}`
+    dateEl.appendChild(dateItem)
+  }
+})
