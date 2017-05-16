@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Options — Qowala</title>
+    <link rel="shortcut icon" href="favicon.png">
+    <link rel="stylesheet" href="../assets/options.css">
+  </head>
+  <body>
+    <img src="../assets/logo.png" alt="Qowala">
+    <h1>Settings</h1>
+    <h3>Add a website to track</h3>
+    <p>You can add a social network to track the time you spend on it.</p>
+    <input type="text" id="website" autocomplete="url" pattern="(https?://)?[a-z0-9.-]+\.[a-z]+"/>
+    <button type="button" id="addWebsite">Add</button>
+    <ul id="blacklist">
+    </ul>
+    <script src="options.js"></script>
+  </body>
+</html>
