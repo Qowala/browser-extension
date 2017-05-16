@@ -19,6 +19,11 @@ You think some features should be added? You see some bug? Feel free to contribu
 We advice you to use `web-ext` if you want to write some code. Install it with `npm install -g web-ext`.
 Then, to test the extension with auto-reloading, run `web-ext run`.
 
+## Contributors
+
+- [KillianKemps](https://github.com/KillianKemps)
+- [Bat41](https://github.com/Bat41)
+
 ## License
 
 The Qowala Plugin is under the [CeCILL](LICENSE.md) Free Software License. It is compatible with the GPL License and takes into account the French Law.
