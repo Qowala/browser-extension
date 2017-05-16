@@ -11,11 +11,11 @@
   },
   "browser_action": {
     "browser_style": false,
-    "default_icon": "favicon.png",
-    "default_popup": "popup.html"
+    "default_icon": "assets/favicon.png",
+    "default_popup": "lib/popup.html"
   },
   "icons": {
-    "48": "favicon.png"
+    "48": "assets/favicon.png"
   },
   "permissions": [
     "activeTab",
@@ -24,10 +24,10 @@
     "storage"
   ],
   "background": {
-    "scripts": ["background-script.js"]
+    "scripts": ["lib/background-script.js"]
   },
   "options_ui": {
-    "page": "options.html",
+    "page": "lib/options.html",
     "open_in_tab": true
   }
 }
