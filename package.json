@@ -6,5 +6,8 @@
   },
   "scripts": {
     "test": "standard"
+  },
+  "standard": {
+    "globals": [ "chrome", "URL", "alert" ]
   }
 }
