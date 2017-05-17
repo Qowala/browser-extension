@@ -1,0 +1,10 @@
+{
+  "name": "Qowala-browser-plugin",
+  "private": "true",
+  "devDependencies": {
+    "standard": "*"
+  },
+  "scripts": {
+    "test": "standard"
+  }
+}
