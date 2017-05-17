@@ -1,5 +1,7 @@
 # Qowala Browser Plugin
 
+[![Build Status](https://travis-ci.org/Qowala/browser-extension.svg?branch=master)](https://travis-ci.org/Qowala/browser-extension)
+
 Do you know you much time you spend on social networks? This plugin helps you to know.
 Simply add the Qowala plugin to your browser and it will display the time you spent.
 
