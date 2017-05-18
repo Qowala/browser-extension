@@ -50,3 +50,30 @@ ul li {
   font-family: 'Roboto';
   padding: 5px 0px;
 }
+
+#error {
+  color: red;
+  animation-duration: 5s;
+}
+
+.hide {
+  opacity: 0;
+  height: 0px;
+}
+
+.show {
+  animation-name: fadeout;
+  height: 1em;
+}
+
+@keyframes fadeout {
+  25% {
+    opacity: 1;
+    height: 1em;
+  }
+
+  to {
+    opacity: 0;
+    height: 0px;
+  }
+}

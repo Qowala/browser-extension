@@ -11,7 +11,10 @@
     <h1>Settings</h1>
     <h3>Add a website to track</h3>
     <p>You can add a social network to track the time you spend on it.</p>
-    <input type="text" id="website" autocomplete="url" pattern="(https?://)?[a-z0-9.-]+\.[a-z]+"/>
+    <p id ="error" class="hide">
+      Please enter a valid domain name, like <code>example.org</code>.
+    </p>
+    <input type="text" id="website" autocomplete="url" pattern="[a-z0-9.-]+\.[a-z]+"/>
     <button type="button" id="addWebsite">Add</button>
     <ul id="blacklist">
     </ul>
