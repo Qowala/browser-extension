@@ -74,3 +74,18 @@ h3 {
   background-position: left 50%;
   padding-left: 17px;
 }
+.btn {
+  font-family: "robotobold", "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+  text-transform: uppercase;
+  padding: 15px 30px;
+  box-shadow: 0px 5px 40px rgba(0, 0, 0, 0.2);
+  border: none;
+  border-radius: 2px;
+  margin: 20px auto;
+  cursor: pointer;
+  display: block;
+}
+.btn.primary {
+  background: white;
+  color: #21A868;
+}
