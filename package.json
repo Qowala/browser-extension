@@ -7,9 +7,13 @@
     "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-node": "^4.2.2",
     "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-standard": "^3.0.1",
+    "jsdom": "11.0.0",
+    "jsdom-global": "3.0.2",
+    "mocha": "^3.4.2",
+    "sinon-chrome": "^2.2.1"
   },
   "scripts": {
-    "test": "./node_modules/.bin/eslint ."
+    "test": "./node_modules/.bin/eslint . && ./node_modules/.bin/mocha"
   }
 }
