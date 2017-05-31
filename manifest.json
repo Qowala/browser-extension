@@ -1,6 +1,5 @@
 {
   "manifest_version": 2,
-
   "name": "Qowala",
   "description": "This extension helps you to overcome your Web addiction",
   "version": "0.2.1",
@@ -24,10 +23,13 @@
     "storage"
   ],
   "background": {
-    "scripts": ["lib/background-script.js"]
+    "scripts": [
+      "lib/background-script.js"
+    ]
   },
   "options_ui": {
     "page": "lib/options.html",
     "open_in_tab": true
-  }
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

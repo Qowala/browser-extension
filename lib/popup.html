@@ -5,7 +5,39 @@
      <link rel="stylesheet" href="../assets/popup.css">
   </head>
   <body>
-    <script src="mithril.min.js"></script>
-    <script src="popup.js"></script>
+    <main id="app">
+      <header>
+        <img src="../assets/white_logo.png" alt="Qowala">
+        <hr>
+      </header>
+      <div v-if="tracked">
+        <p class="text secondary">
+          You've spent…
+        </p>
+        <div class="time-spent">
+          {{ timeSpent }}
+        </div>
+        <div class="parameters">
+          On
+          <select v-model="hostname" class="parameters__dropdown network">
+            <option v-if="noData" disabled :value="hostname">Please select another site</option>
+            <option v-for="site in topSites" :value="site">{{ site }}</option>
+          </select>
+          <select v-model="date" class="parameters__dropdown date">
+            <option v-for="day in validDates" :value="day">{{ day }}</option>
+          </select>
+        </div>
+      </div>
+      <div v-else>
+        <p class="text secondary">
+          It looks like this website is not on your list.
+          <br>
+          If it should, you can add it now.
+        </p>
+        <button v-on:click="track" class="btn primary">Start tracking</button>
+      </div>
+    </main>
+    <script src="../node_modules/vue/dist/vue.js"></script>
+    <script src="./popup.js"></script>
   </body>
 </html>

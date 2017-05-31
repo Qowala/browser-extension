@@ -1,47 +1,18 @@
-var assert = require('assert')
-var mocha = require('mocha')
-var describe = mocha.describe
-var it = mocha.it
-var before = mocha.before
-
-var chrome = require('sinon-chrome')
-
-var html = `
-<!DOCTYPE html>
-<html>
-  <meta charset="UTF-8">
-  <head>
-     <link rel="stylesheet" href="../assets/popup.css">
-  </head>
-  <body>
-    <header>
-      <img src="../assets/white_logo.png" alt="Qowala logo"/>
-      <span>Hey, it's your friends at Qowala!</span>
-      <div></div>
-    </header>
-    <div class="non-measure-display">
-      <h3>This website is not tracked!</h3>
-    </div>
-    <div class="measure-display">
-      <h3>You've spent...</h3>
-      <div class="time-spent"></div>
-      <div class="parameters">
-        On <select class="parameters__dropdown network"></select>
-        <select class="parameters__dropdown date"></select>
-      </div>
-    </div>
-    <script src="popup.js"></script>
-  </body>
-</html>`
+const assert = require('assert')
+const { describe, it, before } = require('mocha')
+const chrome = require('sinon-chrome')
+const fs = require('fs')
+const path = require('path')
 
 // Mock the DOM to allow functions accesssing it to work
-require('jsdom-global')(html)
+require('jsdom-global')(fs.readFileSync(path.join(__dirname, '../lib/popup.html')))
 
 describe('Popup', () => {
   before(() => {
     // Mock chrome with sinon.chrome in order to simulate the browser API
     global.chrome = chrome
     // Load the code to test
+    global.Vue = require('vue')
     this.popup = require('../lib/popup.js')
   })
 

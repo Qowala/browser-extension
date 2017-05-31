@@ -9,6 +9,6 @@ module.exports = {
     },
     globals: {
       chrome: false,
-      m: false
+      Vue: false
     }
 };

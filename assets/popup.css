@@ -6,6 +6,7 @@
 }
 body {
   min-width: 240px;
+  max-width: 480px;
   font-family: "robotobold", "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
   font-size: 100%;
   color: #6FCF97;
@@ -26,17 +27,10 @@ header img {
 .text.secondary {
   margin: 15px 5px 0px;
 }
-.non-measure-display {
-  display: block;
-}
-.measure-display {
-  display: none;
-}
 .time-spent {
   color: #FFF;
   font-size: 36px;
   text-transform: uppercase;
-  text-align: justify;
 }
 .network, .date {
   font-family: "robotobold", "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
