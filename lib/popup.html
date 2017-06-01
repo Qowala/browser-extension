@@ -20,7 +20,6 @@
         <div class="parameters">
           On
           <select v-model="hostname" class="parameters__dropdown network">
-            <option v-if="noData" disabled :value="hostname">Please select another site</option>
             <option v-for="site in topSites" :value="site">{{ site }}</option>
           </select>
           <select v-model="date" class="parameters__dropdown date">
