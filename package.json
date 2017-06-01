@@ -1,9 +1,6 @@
 {
   "name": "Qowala-browser-plugin",
   "private": "true",
-  "dependencies": {
-    "vue": "^2.3.3"
-  },
   "devDependencies": {
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",

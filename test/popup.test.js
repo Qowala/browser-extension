@@ -28,7 +28,7 @@ describe('Popup', function () {
     // Mock chrome with sinon.chrome in order to simulate the browser API
     global.chrome = chrome
     // Load the code to test
-    global.Vue = require('vue')
+    global.Vue = require('../lib/vue.js')
     chrome.storage.local.set(storage)
     this.popup = require('../lib/popup.js')
   })
