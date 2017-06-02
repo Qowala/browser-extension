@@ -8,6 +8,7 @@ module.exports = {
       browser: true
     },
     globals: {
-      chrome: false
+      chrome: false,
+      Vue: false
     }
 };
