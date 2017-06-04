@@ -30,8 +30,23 @@ describe('Options', function () {
       ])
     })
 
+    it('should convert hostname without www subdomain', function () {
+      this.options.websiteInput = 'www.facebook.com'
+      this.options.addWebsite()
+      assert.deepEqual(this.options.blacklist, [
+        'facebook.com',
+        'twitter.com'
+      ])
+    })
+
     it('should not add the website if it is already here', function () {
       this.options.websiteInput = 'twitter.com'
+      this.options.addWebsite()
+      assert.deepEqual(this.options.blacklist, [
+        'twitter.com'
+      ])
+
+      this.options.websiteInput = 'www.twitter.com'
       this.options.addWebsite()
       assert.deepEqual(this.options.blacklist, [
         'twitter.com'
@@ -52,7 +67,7 @@ describe('Options', function () {
 
     it('should be false if there is no URL', function () {
       this.options.websiteInput = ''
-      assert.equal(this.options.error, true)
+      assert.equal(this.options.error, false)
     })
   })
 
