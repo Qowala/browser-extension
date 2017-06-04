@@ -67,7 +67,7 @@ describe('Options', function () {
 
     it('should be false if there is no URL', function () {
       this.options.websiteInput = ''
-      assert.equal(this.options.error, true)
+      assert.equal(this.options.error, false)
     })
   })
 
