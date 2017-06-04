@@ -25,21 +25,27 @@ p {
   font-family: 'Roboto';
   color: rgba(0, 0, 0, 0.5);
 }
+
+form {
+  display: flex;
+}
 button, input {
   border: none;
   border-radius: 2px;
   padding: 10px;
-  min-width: 150px;
 }
 input {
+  flex-grow: 1;
   background: rgba(0, 0, 0, 0.1);
 }
 button {
+  min-width: 150px;
   background: #21A868;
   color: white;
   text-transform: uppercase;
   margin-left: 20px;
 }
+
 ul {
   padding: 0px;
   margin-top: 20px;
@@ -49,31 +55,33 @@ ul li {
   list-style: none;
   font-family: 'Roboto';
   padding: 5px 0px;
+  display: flex;
+  align-items: center;
+  transition: all .5s;
+  padding: 10px;
+  border-radius: 2px;
+}
+
+ul li:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+ul li span.hostname {
+  flex-grow: 1;
+}
+
+ul li span.delete-icon {
+  cursor: pointer;
+  padding: 5px;
 }
 
 #error {
   color: red;
-  animation-duration: 5s;
 }
 
-.hide {
-  opacity: 0;
-  height: 0px;
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
 }
-
-.show {
-  animation-name: fadeout;
-  height: 1em;
-}
-
-@keyframes fadeout {
-  25% {
-    opacity: 1;
-    height: 1em;
-  }
-
-  to {
-    opacity: 0;
-    height: 0px;
-  }
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0
 }
