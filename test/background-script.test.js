@@ -60,4 +60,34 @@ describe('Background script', function () {
       assert.equal(exampleTracking, undefined)
     })
   })
+
+  describe('cleanHostnames', function () {
+    it('should convert websites in the form of www.example.com', function () {
+      const inputHostnames = [
+        'facebook.com',
+        'www.messenger.com',
+        'messenger.com',
+        'www.twitter.com',
+        'www.api.twitter.com'
+      ]
+      const expectedHostnames = [
+        'facebook.com',
+        'messenger.com',
+        'twitter.com',
+        'www.api.twitter.com'
+      ]
+      assert.deepEqual(this.bgScript.cleanHostnames(inputHostnames), expectedHostnames)
+    })
+    it('should remove some typos in the blacklist', function () {
+      const inputHostnames = [
+        'facebook.com',
+        'www.dailymotion',
+        'www.tumblr'
+      ]
+      const expectedHostnames = [
+        'facebook.com'
+      ]
+      assert.deepEqual(this.bgScript.cleanHostnames(inputHostnames), expectedHostnames)
+    })
+  })
 })
