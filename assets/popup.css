@@ -6,7 +6,7 @@
 }
 body {
   min-width: 240px;
-  max-width: 480px;
+  max-width: 320px;
   font-family: "robotobold", "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
   font-size: 100%;
   color: #6FCF97;
@@ -17,41 +17,45 @@ body {
 header hr {
   border: 1px solid #6FCF97;
   margin: 15px auto 0;
-  margin-bottom: 30px;
 }
 header img {
   width: 25px;
   display: block;
   margin: 10px auto;
 }
-.text.secondary {
-  margin: 15px 5px 0px;
+
+p {
+  margin: 0px;
+}
+.section {
+  margin: 30px auto;
+}
+.text.primary {
+  color: white;
 }
 .time-spent {
   color: #FFF;
   font-size: 36px;
   text-transform: uppercase;
+  padding: 0px;
 }
-.network, .date {
+
+.parameters {
+  display: flex;
+}
+.dropdown {
   font-family: "robotobold", "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-  font-size: 100%;
-  color: #FFF;
-}
-.network {
-  margin-left: 5px;
-}
-.date {
-  margin-left: 15px;
-}
-.parameters__dropdown {
-  border: 0 !important;  /*REMOVES BORDER*/
-  -webkit-appearance: none;  /*REMOVES DEFAULT CHROME & SAFARI STYLE*/
-  -moz-appearance: none;  /*REMOVES DEFAULT FIREFOX STYLE*/
+  border: 0 !important;  /* removes border */
+  -webkit-appearance: none;  /* removes default Chrome & Safari style */
+  -moz-appearance: none;  /* removes default Firefox style */
   appearance: none;
   background-color: #21A868;
   cursor: pointer;
   color: #FFF;
   display: inline;
+  font-size: 100%;
+  margin: 0px 5px;
+  flex: 1;
 
   background: url('../assets/arrow-down.png');
   background-size: 13px;
@@ -73,4 +77,16 @@ header img {
 .btn.primary {
   background: white;
   color: #21A868;
+}
+
+.progress-bar, .progress {
+  height: 5px;
+  border-radius: 5px;
+}
+.progress-bar {
+  margin: 10px 0px;
+  background: #6FCF97;
+}
+.progress {
+   background: white;
 }

@@ -11,24 +11,36 @@
         <hr>
       </header>
       <div v-if="tracked">
-        <p class="text secondary">
-          You've spent…
-        </p>
-        <div class="time-spent">
-          {{ timeSpent }}
+        <div class="section">
+          <p>
+            You've spent…
+          </p>
+          <div class="time-spent">
+            {{ timeSpent }}
+          </div>
+          <div class="parameters">
+            On
+            <select v-model="hostname" class="dropdown network">
+              <option v-for="site in topSites" :value="site">{{ site }}</option>
+            </select>
+            <select v-model="date" class="dropdown date">
+              <option v-for="day in validDates" :value="day">{{ day }}</option>
+            </select>
+          </div>
         </div>
-        <div class="parameters">
-          On
-          <select v-model="hostname" class="parameters__dropdown network">
-            <option v-for="site in topSites" :value="site">{{ site }}</option>
-          </select>
-          <select v-model="date" class="parameters__dropdown date">
-            <option v-for="day in validDates" :value="day">{{ day }}</option>
-          </select>
+        <div class="section">
+          <p>That represents…</p>
+          <div class="progress-bar">
+            <div class="progress" v-bind:style="{ width: `${percentage}%` }"></div>
+          </div>
+          <p>
+            <span class="text primary">{{ percentage }}%</span> of your total
+            time spent on social networks <span class="text primary">{{ date.toLowerCase() }}</span>
+          </p>
         </div>
       </div>
-      <div v-else>
-        <p class="text secondary">
+      <div class="section" v-else>
+        <p>
           It looks like this website is not on your list.
           <br>
           If it should, you can add it now.

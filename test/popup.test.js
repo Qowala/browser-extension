@@ -20,7 +20,8 @@ const storage = {
   hostNavigationStats: {}
 }
 storage.hostNavigationStats[dates.Today] = {
-  'twitter.com': 10
+  'twitter.com': 10,
+  'facebook.com': 30
 }
 
 describe('Popup', function () {
@@ -29,8 +30,10 @@ describe('Popup', function () {
     global.chrome = chrome
     // Load the code to test
     global.Vue = require('../lib/vue.js')
-    chrome.storage.local.set(storage)
     this.popup = require('../lib/popup.js')
+    this.popup.config = storage.config
+    this.popup.stats = storage.hostNavigationStats
+    this.popup.hostname = this.popup.activeURL = 'twitter.com'
   })
 
   describe('formatTime', function () {
@@ -45,6 +48,12 @@ describe('Popup', function () {
     })
     it('should return time with plural when the time spent has several units', function () {
       assert.equal(this.popup.formatTime(5), '5 seconds')
+    })
+  })
+
+  describe('percentage', function () {
+    it('should correspond to the percentage of time spent on a specific website', function () {
+      assert.equal(this.popup.percentage, 25)
     })
   })
 })
