@@ -82,19 +82,19 @@ describe('Popup', function () {
 
   describe('computed tracked', function () {
     it('should return true when website is tracked', function () {
-      this.popup.activeURL = 'twitter.com'
+      this.popup.hostname = 'twitter.com'
       assert.equal(this.popup.tracked, true)
     })
     it('should return true even when website has www.', function () {
-      this.popup.activeURL = 'www.twitter.com'
+      this.popup.hostname = 'www.twitter.com'
       assert.equal(this.popup.tracked, true)
     })
     it('should return false even when website has subdomain.', function () {
-      this.popup.activeURL = 'lol.twitter.com'
+      this.popup.hostname = 'lol.twitter.com'
       assert.equal(this.popup.tracked, false)
     })
     it('should return false when website is not tracked', function () {
-      this.popup.activeURL = 'awesome-website.com'
+      this.popup.hostname = 'awesome-website.com'
       assert.equal(this.popup.tracked, false)
     })
   })
