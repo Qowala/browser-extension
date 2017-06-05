@@ -10,11 +10,11 @@
   },
   "browser_action": {
     "browser_style": false,
-    "default_icon": "assets/favicon.png",
-    "default_popup": "lib/popup.html"
+    "default_icon": "dist/favicon.png",
+    "default_popup": "dist/popup.html"
   },
   "icons": {
-    "48": "assets/favicon.png"
+    "48": "dist/favicon.png"
   },
   "permissions": [
     "activeTab",
@@ -24,12 +24,11 @@
   ],
   "background": {
     "scripts": [
-      "lib/background-script.js"
+      "dist/background-script.js"
     ]
   },
   "options_ui": {
-    "page": "lib/options.html",
+    "page": "dist/options.html",
     "open_in_tab": true
-  },
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  }
 }
