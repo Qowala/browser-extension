@@ -30,6 +30,7 @@
   },
   "scripts": {
     "build": "./node_modules/.bin/webpack",
-    "test": "./node_modules/.bin/eslint . && ./node_modules/.bin/mocha dist/tests.js"
+    "build:test": "./node_modules/.bin/webpack --config webpack.test.config.js",
+    "test": "./node_modules/.bin/eslint . && npm run build:test && ./node_modules/.bin/mocha dist/tests.js"
   }
 }

@@ -1,21 +1,17 @@
 const path = require('path')
 const webpack = require('webpack')
-const nodeExternals = require('webpack-node-externals')
 
 module.exports = {
   entry: {
     'popup': './lib/popup/popup.js',
     'options': './lib/options/options.js',
-    'background-script': './lib/background/background-script.js',
-    'tests': './test/index.js'
+    'background-script': './lib/background/background-script.js'
   },
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
     filename: '[name].js'
   },
-  target: 'node',
-  externals: [ nodeExternals() ],
   module: {
     rules: [
       {
