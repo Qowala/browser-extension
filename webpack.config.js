@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: {
@@ -8,10 +9,13 @@ module.exports = {
     'background-script': './lib/background/background-script.js'
   },
   output: {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
+    path: path.resolve(__dirname, './build/dist/'),
+    publicPath: '/',
     filename: '[name].js'
   },
+  plugins: [
+    new CopyWebpackPlugin([{ from: 'lib/manifest.json', to: 'manifest.json' }])
+  ],
   module: {
     rules: [
       {

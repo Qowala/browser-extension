@@ -18,7 +18,7 @@ const storage = {
 
 describe('Background script', function () {
   before(function () {
-    require('jsdom-global')()
+    require('jsdom-global')('')
     // Mock chrome with sinon.chrome in order to simulate the browser API
     global.chrome = chrome
     // Load the code to test

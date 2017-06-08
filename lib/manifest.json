@@ -10,11 +10,11 @@
   },
   "browser_action": {
     "browser_style": false,
-    "default_icon": "dist/favicon.png",
-    "default_popup": "dist/popup.html"
+    "default_icon": "favicon.png",
+    "default_popup": "popup.html"
   },
   "icons": {
-    "48": "dist/favicon.png"
+    "48": "favicon.png"
   },
   "permissions": [
     "activeTab",
@@ -24,11 +24,11 @@
   ],
   "background": {
     "scripts": [
-      "dist/background-script.js"
+      "background-script.js"
     ]
   },
   "options_ui": {
-    "page": "dist/options.html",
+    "page": "options.html",
     "open_in_tab": true
   }
 }
