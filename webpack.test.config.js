@@ -12,5 +12,6 @@ config.output = {
 }
 config.target = 'node'
 config.externals = [ nodeExternals() ]
+config.plugins = []
 
 module.exports = config
