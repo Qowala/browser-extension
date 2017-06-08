@@ -1,14 +1,62 @@
-const app = new Vue({
-  el: '#app',
-  data: {
-    dates: {
-      'Today': new Date(new Date().setHours(0, 0, 0, 0)),
-      'Yesterday': new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(0, 0, 0, 0))
-    },
-    date: 'Today',
-    config: {},
-    stats: {},
-    activeURL: ''
+<template lang="html">
+  <main>
+    <header>
+      <img src="../assets/logo-white.png" alt="Qowala">
+      <hr>
+    </header>
+    <div v-if="tracked">
+      <div class="section">
+        <p>
+          You've spent…
+        </p>
+        <div class="time-spent">
+          {{ timeSpent }}
+        </div>
+        <div class="parameters">
+          On
+          <select v-model="hostname" class="dropdown network">
+            <option v-for="site in topSites" :value="site">{{ site }}</option>
+          </select>
+          <select v-model="date" class="dropdown date">
+            <option v-for="day in validDates" :value="day">{{ day }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="section">
+        <p>That represents…</p>
+        <div class="progress-bar">
+          <div class="progress" v-bind:style="{ width: `${percentage}%` }"></div>
+        </div>
+        <p>
+          <span class="text primary">{{ percentage }}%</span> of your total
+          time spent on social networks <span class="text primary">{{ date.toLowerCase() }}</span>
+        </p>
+      </div>
+    </div>
+    <div class="section" v-else>
+      <p>
+        It looks like this website is not on your list.
+        <br>
+        If it should, you can add it now.
+      </p>
+      <button v-on:click="track" class="btn primary big">Start tracking</button>
+    </div>
+  </main>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      dates: {
+        'Today': new Date(new Date().setHours(0, 0, 0, 0)),
+        'Yesterday': new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(0, 0, 0, 0))
+      },
+      date: 'Today',
+      config: {},
+      stats: {},
+      activeURL: ''
+    }
   },
   computed: {
     hostname: {
@@ -107,8 +155,85 @@ const app = new Vue({
       this.hostname = this.activeURL = new URL(tabs[0].url).hostname
     })
   }
-})
-
-if (module) {
-  module.exports = app
 }
+</script>
+
+<style lang="scss">
+@import '../assets/fonts';
+@import '../assets/ui-variables';
+
+$bg: $green;
+$primary: $white;
+$text: $white;
+$secondary: $light-green;
+
+@import '../assets/common';
+
+body {
+  min-width: 240px;
+  max-width: 320px;
+  font-size: 100%;
+  color: $secondary;
+  padding: 10px 20px 20px;
+}
+
+p {
+  margin: 0px;
+}
+
+header {
+  hr {
+    border: 1px solid $light-green;
+    margin: 15px auto 0;
+  }
+
+  img {
+    width: 25px;
+    display: block;
+    margin: 10px auto;
+  }
+}
+
+.time-spent {
+  color: $white;
+  font-size: 36px;
+  text-transform: uppercase;
+  padding: 0px;
+}
+
+.parameters {
+  display: flex;
+}
+.dropdown {
+  font-family: $font-stack;
+  border: 0 !important;  /* removes border */
+  -webkit-appearance: none;  /* removes default Chrome & Safari style */
+  -moz-appearance: none;  /* removes default Firefox style */
+  appearance: none;
+  background-color: $green;
+  color: $white;
+  cursor: pointer;
+  display: inline;
+  font-size: 100%;
+  margin: 0px 5px;
+  flex: 1;
+
+  background: url('../assets/arrow-down.png');
+  background-size: 13px;
+  background-repeat: no-repeat;
+  background-position: right center;
+  padding-right: 17px;
+}
+
+.progress-bar, .progress {
+  height: 5px;
+  border-radius: 5px;
+}
+.progress-bar {
+  margin: 10px 0px;
+  background: $light-green;
+}
+.progress {
+   background: $white;
+}
+</style>

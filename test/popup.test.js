@@ -1,11 +1,7 @@
 const assert = require('assert')
 const { describe, it, before, beforeEach } = require('mocha')
 const chrome = require('sinon-chrome')
-const fs = require('fs')
-const path = require('path')
-
-// Mock the DOM to allow functions accesssing it to work
-require('jsdom-global')(fs.readFileSync(path.join(__dirname, '../lib/popup.html')))
+const mount = require('./mount').default
 
 const dates = {
   'Today': new Date(new Date().setHours(0, 0, 0, 0)),
@@ -29,8 +25,7 @@ describe('Popup', function () {
     // Mock chrome with sinon.chrome in order to simulate the browser API
     global.chrome = chrome
     // Load the code to test
-    global.Vue = require('../lib/vue.js')
-    this.popup = require('../lib/popup.js')
+    this.popup = mount(require('../lib/popup/popup.vue'))
     this.popup.config = storage.config
     this.popup.stats = storage.hostNavigationStats
     this.popup.hostname = this.popup.activeURL = 'twitter.com'

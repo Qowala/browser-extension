@@ -1,0 +1,53 @@
+html, body, ul, li, ol {
+  padding: 0px;
+  margin: 0px;
+  list-style: none;
+}
+
+body {
+  font-family: $font-stack;
+  color: $text;
+  background-color: $bg;
+  border: none;
+}
+
+.section {
+  margin: 30px auto;
+}
+
+.text.primary {
+  color: $primary;
+}
+
+.btn, input {
+  border: none;
+  border-radius: 2px;
+  padding: 10px;
+}
+
+.btn {
+  font-family: $font-stack;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  display: block;
+  min-width: 150px;
+
+  &.primary {
+    background: $primary;
+    color: $bg;
+  }
+
+  &.big {
+    padding: 15px 30px;
+    margin: 20px auto;
+    box-shadow: 0px 5px 40px rgba(0, 0, 0, 0.2);
+  }
+}
+
+input {
+  flex-grow: 1;
+  background: $secondary;
+  margin-right: 20px;
+}
