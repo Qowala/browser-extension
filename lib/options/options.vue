@@ -11,7 +11,7 @@
     </transition>
     <form v-on:submit.prevent="addWebsite">
       <input v-model.lazy="websiteInput" type="text" id="website" autocomplete="url" />
-      <button type="submit">Add</button>
+      <button class="btn primary" type="submit">Add</button>
     </form>
     <ul id="blacklist">
       <transition-group name="fade">
@@ -67,82 +67,72 @@ export default {
 }
 </script>
 
-<style lang="css">
-@font-face {
-  font-family: 'Roboto Bold';
-  src: url('../assets/roboto-bold.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
+<style lang="scss">
+@import '../assets/fonts';
+@import '../assets/ui-variables';
+
+$bg: $white;
+$primary: $green;
+$text: black;
+$secondary: $light-gray;
+
+@import '../assets/common';
+
 body {
-  font-family: "Roboto Bold", "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+  font-family: $font-stack;
   padding: 50px 10%;
 }
+
 img {
   display: block;
   width: 20%;
   margin: 0px auto;
 }
+
 h1 {
   text-transform: uppercase;
   font-size: 1.5em;
   font-weight: lighter;
 }
+
 h3 {
   font-weight: lighter;
 }
+
 p {
   font-family: 'Roboto';
-  color: rgba(0, 0, 0, 0.5);
+  color: $gray;
 }
 
 form {
   display: flex;
 }
-button, input {
-  border: none;
-  border-radius: 2px;
-  padding: 10px;
-}
-input {
-  flex-grow: 1;
-  background: rgba(0, 0, 0, 0.1);
-}
-button {
-  min-width: 150px;
-  background: #21A868;
-  color: white;
-  text-transform: uppercase;
-  margin-left: 20px;
-}
 
 ul {
-  padding: 0px;
   margin-top: 20px;
-}
 
-ul li {
-  list-style: none;
-  font-family: 'Roboto';
-  padding: 5px 0px;
-  display: flex;
-  align-items: center;
-  transition: all .5s;
-  padding: 10px;
-  border-radius: 2px;
-}
+  li {
+    font-family: 'Roboto';
+    padding: 5px 0px;
+    display: flex;
+    align-items: center;
+    transition: all .5s;
+    padding: 10px;
+    border-radius: 2px;
 
-ul li:hover {
-  background: rgba(0, 0, 0, 0.05);
-}
+    &:hover {
+      background: $light-gray;
+    }
 
-ul li span.hostname {
-  flex-grow: 1;
-}
+    span.hostname {
+      flex-grow: 1;
+    }
 
-ul li span.delete-icon {
-  cursor: pointer;
-  padding: 5px;
+    span.delete-icon {
+      cursor: pointer;
+      padding: 5px;
+    }
+  }
 }
 
 #error {

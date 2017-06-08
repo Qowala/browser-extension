@@ -39,7 +39,7 @@
         <br>
         If it should, you can add it now.
       </p>
-      <button v-on:click="track" class="btn primary">Start tracking</button>
+      <button v-on:click="track" class="btn primary big">Start tracking</button>
     </div>
   </main>
 </template>
@@ -158,44 +158,44 @@ export default {
 }
 </script>
 
-<style lang="css">
-@font-face {
-  font-family: 'Roboto Bold';
-  src: url('../assets/roboto-bold.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
+<style lang="scss">
+@import '../assets/fonts';
+@import '../assets/ui-variables';
+
+$bg: $green;
+$primary: $white;
+$text: $white;
+$secondary: $light-green;
+
+@import '../assets/common';
+
 body {
   min-width: 240px;
   max-width: 320px;
-  font-family: "Roboto Bold", "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
   font-size: 100%;
-  color: #6FCF97;
-  background-color: #21A868;
-  border: none;
+  color: $secondary;
   padding: 10px 20px 20px;
-}
-header hr {
-  border: 1px solid #6FCF97;
-  margin: 15px auto 0;
-}
-header img {
-  width: 25px;
-  display: block;
-  margin: 10px auto;
 }
 
 p {
   margin: 0px;
 }
-.section {
-  margin: 30px auto;
+
+header {
+  hr {
+    border: 1px solid $light-green;
+    margin: 15px auto 0;
+  }
+
+  img {
+    width: 25px;
+    display: block;
+    margin: 10px auto;
+  }
 }
-.text.primary {
-  color: white;
-}
+
 .time-spent {
-  color: #FFF;
+  color: $white;
   font-size: 36px;
   text-transform: uppercase;
   padding: 0px;
@@ -205,14 +205,14 @@ p {
   display: flex;
 }
 .dropdown {
-  font-family: "Roboto Bold", "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+  font-family: $font-stack;
   border: 0 !important;  /* removes border */
   -webkit-appearance: none;  /* removes default Chrome & Safari style */
   -moz-appearance: none;  /* removes default Firefox style */
   appearance: none;
-  background-color: #21A868;
+  background-color: $green;
+  color: $white;
   cursor: pointer;
-  color: #FFF;
   display: inline;
   font-size: 100%;
   margin: 0px 5px;
@@ -224,21 +224,6 @@ p {
   background-position: right center;
   padding-right: 17px;
 }
-.btn {
-  font-family: "Roboto Bold", "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-  text-transform: uppercase;
-  padding: 15px 30px;
-  box-shadow: 0px 5px 40px rgba(0, 0, 0, 0.2);
-  border: none;
-  border-radius: 2px;
-  margin: 20px auto;
-  cursor: pointer;
-  display: block;
-}
-.btn.primary {
-  background: white;
-  color: #21A868;
-}
 
 .progress-bar, .progress {
   height: 5px;
@@ -246,9 +231,9 @@ p {
 }
 .progress-bar {
   margin: 10px 0px;
-  background: #6FCF97;
+  background: $light-green;
 }
 .progress {
-   background: white;
+   background: $white;
 }
 </style>
