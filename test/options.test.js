@@ -1,19 +1,14 @@
 const assert = require('assert')
 const { describe, it, before, beforeEach } = require('mocha')
 const chrome = require('sinon-chrome')
-const fs = require('fs')
-const path = require('path')
-
-// Mock the DOM to allow functions accesssing it to work
-require('jsdom-global')(fs.readFileSync(path.join(__dirname, '../lib/options.html')))
+const mount = require('./mount').default
 
 describe('Options', function () {
   before(function () {
     // Mock chrome with sinon.chrome in order to simulate the browser API
     global.chrome = chrome
     // Load the code to test
-    global.Vue = require('../lib/vue.js')
-    this.options = require('../lib/options.js')
+    this.options = mount(require('../lib/options/options.vue'))
   })
 
   beforeEach(function () {

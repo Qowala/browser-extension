@@ -9,24 +9,27 @@
     "babel-loader": "^6.0.0",
     "babel-preset-env": "^1.5.1",
     "css-loader": "^0.25.0",
-    "file-loader": "^0.9.0",
-    "node-sass": "^4.5.0",
-    "sass-loader": "^5.0.1",
-    "vue-loader": "^12.1.0",
-    "vue-template-compiler": "^2.3.3",
-    "webpack": "^2.6.1",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-node": "^4.2.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
+    "file-loader": "^0.9.0",
     "jsdom": "11.0.0",
     "jsdom-global": "3.0.2",
     "mocha": "^3.4.2",
-    "sinon-chrome": "^2.2.1"
+    "mocha-webpack": "^0.7.0",
+    "node-sass": "^4.5.0",
+    "sass-loader": "^5.0.1",
+    "sinon-chrome": "^2.2.1",
+    "vue-loader": "^12.1.0",
+    "vue-template-compiler": "^2.3.3",
+    "webpack": "^2.6.1",
+    "webpack-node-externals": "^1.6.0"
   },
   "scripts": {
-    "test": "./node_modules/.bin/eslint . && ./node_modules/.bin/mocha"
+    "build": "./node_modules/.bin/webpack",
+    "test": "./node_modules/.bin/eslint . && ./node_modules/.bin/mocha dist/tests.js"
   }
 }

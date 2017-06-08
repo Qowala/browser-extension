@@ -18,11 +18,11 @@ const storage = {
 
 describe('Background script', function () {
   before(function () {
+    require('jsdom-global')()
     // Mock chrome with sinon.chrome in order to simulate the browser API
     global.chrome = chrome
     // Load the code to test
-    chrome.storage.local.set(storage)
-    this.bgScript = require('../lib/background-script.js')
+    this.bgScript = require('../lib/background/background-script.js')
   })
 
   beforeEach(function () {
