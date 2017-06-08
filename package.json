@@ -33,7 +33,8 @@
   "scripts": {
     "build": "./node_modules/.bin/webpack",
     "build:test": "./node_modules/.bin/webpack --config webpack.test.config.js",
-    "test": "./node_modules/.bin/eslint . && ./node_modules/.bin/web-ext lint && npm run build:test && ./node_modules/.bin/mocha build/tests/tests.js",
-    "start": "npm run build && cd build/dist && ../../node_modules/.bin/web-ext run --verbose"
+    "build:all": "npm run build && npm run build:test",
+    "test": "./node_modules/.bin/eslint . && ./node_modules/.bin/mocha build/tests/tests.js",
+    "start": "npm run build && ./node_modules/.bin/web-ext run -s build/dist --verbose"
   }
 }
