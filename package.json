@@ -2,6 +2,7 @@
   "name": "Qowala-browser-plugin",
   "private": "true",
   "dependencies": {
+    "chart.js": "^2.6.0",
     "vue": "^2.3.3"
   },
   "devDependencies": {
@@ -12,6 +13,7 @@
     "css-loader": "^0.25.0",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-html": "^2.0.3",
     "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-node": "^4.2.2",
     "eslint-plugin-promise": "^3.5.0",
@@ -34,7 +36,8 @@
     "build": "./node_modules/.bin/webpack",
     "build:test": "./node_modules/.bin/webpack --config webpack.test.config.js",
     "build:all": "npm run build && npm run build:test",
-    "test": "./node_modules/.bin/eslint . && npm run build:test && ./node_modules/.bin/mocha build/tests/tests.js",
+    "lint": "./node_modules/.bin/eslint . --ext vue --ext js --ext html",
+    "test": "npm run lint && npm run build:test && ./node_modules/.bin/mocha build/tests/tests.js",
     "start": "npm run build && ./node_modules/.bin/web-ext run -s build/dist --verbose"
   }
 }

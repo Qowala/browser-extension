@@ -1,36 +1,47 @@
 <template lang="html">
   <main>
     <img src="../assets/logo.png" alt="Qowala">
-    <h1>Settings</h1>
-    <h3>Add a website to track</h3>
-    <p>You can add a social network to track the time you spend on it.</p>
-    <transition name="fade">
-      <p v-if="error" id="error">
-        Please enter a valid domain name, like <code>example.org</code>.
-      </p>
-    </transition>
-    <form v-on:submit.prevent="addWebsite">
-      <input v-model.lazy="websiteInput" type="text" id="website" autocomplete="url" />
-      <button class="btn primary" type="submit">Add</button>
-    </form>
-    <ul id="blacklist">
-      <transition-group name="fade">
-        <li v-for="site in blacklist" v-bind:key="site">
-          <span class="hostname">{{ site }}</span>
-          <span class="delete-icon" v-on:click="remove(site)">×</span>
-        </li>
-      </transition-group>
-    </ul>
+    <div class="card">
+      <h1>Settings</h1>
+      <h3>Add a website to track</h3>
+      <p>You can add a social network to track the time you spend on it.</p>
+      <transition name="fade">
+        <p v-if="error" id="error">
+          Please enter a valid domain name, like <code>example.org</code>.
+        </p>
+      </transition>
+      <form v-on:submit.prevent="addWebsite">
+        <input v-model.lazy="websiteInput" type="text" id="website" autocomplete="url" />
+        <button class="btn primary" type="submit">Add</button>
+      </form>
+      <ul id="blacklist">
+        <transition-group name="fade">
+          <li v-for="site in blacklist" v-bind:key="site">
+            <span class="hostname">{{ site }}</span>
+            <span class="delete-icon" v-on:click="remove(site)">×</span>
+          </li>
+        </transition-group>
+      </ul>
+    </div>
+    <div class="card">
+      <h1>Statistics</h1>
+      <h3>How did you spent your time?</h3>
+      <p>See how you spent your time on the websites you added to your Qowala list.</p>
+      <chart :stats="stats"></chart>
+    </div>
   </main>
 </template>
 
 <script>
+import Chart from './chart.vue'
+
 const urlRegex = /[a-z0-9.-]+\.[a-z]+/
 
 export default {
   data () {
     return {
       blacklist: [],
+      stats: [],
       websiteInput: ''
     }
   },
@@ -60,9 +71,13 @@ export default {
     }
   },
   created: function () {
-    chrome.storage.local.get('config', result => {
+    chrome.storage.local.get([ 'hostNavigationStats', 'config' ], result => {
       this.blacklist = result.config.blacklist
+      this.stats = result.hostNavigationStats
     })
+  },
+  components: {
+    Chart
   }
 }
 </script>
