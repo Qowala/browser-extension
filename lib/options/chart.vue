@@ -19,6 +19,7 @@ export default {
         data: {
           labels: [ '7d', '6d', '5d', '4d', '3d', 'Yesterday', 'Today' ],
           datasets: this.websites.map(site => {
+            console.log(site)
             const data = {
               type: 'line',
               fill: false,
@@ -33,7 +34,6 @@ export default {
       })
     },
     genData (site) {
-      console.log(lastSevenDays(), Object.keys(site.navigationStats))
       const res = lastSevenDays().map(d => site.navigationStats[d] || 0)
       return res.filter(x => x !== 0).length ? res : null
     }

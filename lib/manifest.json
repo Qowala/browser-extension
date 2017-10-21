@@ -22,7 +22,8 @@
     "webNavigation",
     "storage",
     "webRequest",
-    "webRequestBlocking"
+    "webRequestBlocking",
+    "<all_urls>"
   ],
   "background": {
     "scripts": [
