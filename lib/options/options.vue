@@ -69,9 +69,7 @@ export default {
   },
   created: function () {
     chrome.storage.local.get({ config: { websites: [] } }, result => {
-      console.log(result)
       this.websites = result.config.websites.map(x => new Website(x))
-      console.log(this.websites)
     })
   },
   components: {
