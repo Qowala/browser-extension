@@ -9,7 +9,8 @@ module.exports = {
       browser: true
     },
     globals: {
-      chrome: false
+      chrome: false,
+      browser: false
     },
     settings: {
       'html/html-extensions': [ '.html', '.vue' ]

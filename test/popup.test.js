@@ -1,3 +1,4 @@
+import Website from '../lib/website'
 const assert = require('assert')
 const { describe, it, before, beforeEach } = require('mocha')
 const chrome = require('sinon-chrome')
@@ -9,15 +10,22 @@ const dates = {
 }
 const storage = {
   config: {
-    blacklist: [
-      'twitter.com'
+    websites: [
+      new Website({
+        url: 'twitter.com',
+        navigationStats: {
+          [dates.Today]: 10
+        }
+      }),
+      new Website({
+        url: 'facebook.com',
+        navigationStats: {
+          [dates.Today]: 30
+        }
+      })
     ]
   },
-  hostNavigationStats: {}
-}
-storage.hostNavigationStats[dates.Today] = {
-  'twitter.com': 10,
-  'facebook.com': 30
+  firstTime: false
 }
 
 describe('Popup', function () {

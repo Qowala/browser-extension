@@ -16,8 +16,8 @@
       </form>
       <ul id="blacklist">
         <transition-group name="fade">
-          <li v-for="site in blacklist" v-bind:key="site">
-            <span class="hostname">{{ site }}</span>
+          <li v-for="site in websites" v-bind:key="site">
+            <span class="hostname">{{ site.name }}</span>
             <span class="delete-icon" v-on:click="remove(site)">×</span>
           </li>
         </transition-group>
@@ -27,21 +27,22 @@
       <h1>Statistics</h1>
       <h3>How did you spent your time?</h3>
       <p>See how you spent your time on the websites you added to your Qowala list.</p>
-      <chart :stats="stats"></chart>
+      <chart :websites="websites"></chart>
     </div>
   </main>
 </template>
 
 <script>
 import Chart from './chart.vue'
+import Website from '../website'
+import { fixUrl, cleanUrl } from '../utils'
 
 const urlRegex = /[a-z0-9.-]+\.[a-z]+/
 
 export default {
   data () {
     return {
-      blacklist: [],
-      stats: [],
+      websites: [],
       websiteInput: ''
     }
   },
@@ -50,30 +51,27 @@ export default {
       return this.websiteInput.length && !this.websiteInput.match(urlRegex)
     },
     hostname: function () {
-      let hostname = new URL(`http://${this.websiteInput}`).hostname
-      if (hostname.startsWith('www.') && (hostname.match(/\./g) || []).length === 2) {
-        hostname = hostname.substring(4)
-      }
-      return hostname
+      return new URL(fixUrl(cleanUrl(this.websiteInput))).hostname
     }
   },
   methods: {
     addWebsite: function () {
-      if (!this.error && !this.blacklist.includes(this.hostname)) {
-        this.blacklist.unshift(this.hostname)
-        chrome.storage.local.set({ config: { blacklist: this.blacklist } })
+      if (!this.error && !this.websites.some(x => x.hostname === this.hostname)) {
+        this.websites.unshift(Website.fromUrl(this.hostname))
+        chrome.storage.local.set({ config: { websites: this.websites } })
         this.websiteInput = ''
       }
     },
-    remove (website) {
-      this.blacklist = this.blacklist.filter(x => x !== website)
-      chrome.storage.local.set({ config: { blacklist: this.blacklist } })
+    remove: function (website) {
+      this.websites = this.websites.filter(x => x !== website)
+      chrome.storage.local.set({ config: { websites: this.websites } })
     }
   },
   created: function () {
-    chrome.storage.local.get([ 'hostNavigationStats', 'config' ], result => {
-      this.blacklist = result.config.blacklist
-      this.stats = result.hostNavigationStats
+    chrome.storage.local.get({ config: { websites: [] } }, result => {
+      console.log(result)
+      this.websites = result.config.websites.map(x => new Website(x))
+      console.log(this.websites)
     })
   },
   components: {

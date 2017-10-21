@@ -8,47 +8,39 @@ import Chart from 'chart'
 export default {
   data () {
     return {
-      chart: null,
-      period: 7 // number of days to show
-    }
-  },
-  computed: {
-    statsBySite: function () {
-      const res = {}
-      for (const date in this.stats) {
-        for (const site in this.stats[date]) {
-          res[site] = res[site] || { hostname: site, data: [] }
-          res.site.data.push({
-            value: this.stats[date][site],
-            date
-          })
-        }
-      }
-      return res
+      chart: null
     }
   },
   methods: {
     createChart: function () {
-      console.log(this)
-      const stats = this.stats
       return new Chart(this.$refs.canvas, {
         type: 'line',
         data: {
-          datasets: stats.map(stats => {
+          datasets: this.websites.map(site => {
             return {
               type: 'line',
-              label: `Time spent on ${stats.hostname}`,
-              data: stats.data.map(d => d.value)
+              label: `Time spent on ${site.name}`,
+              data: this.genData(site),
+              borderColor: site.themeColor,
+              backgroundColor: site.themeColor
             }
           })
         }
       })
+    },
+    genData (site) {
+      return [ Math.floor(Math.random() * 150), Math.floor(Math.random() * 150), Math.floor(Math.random() * 150), Math.floor(Math.random() * 150) ]
     }
   },
-  created: function () {
-    this.chart = this.createChart()
-  },
-  props: [ 'stats' ]
+  props: [ 'websites' ],
+  watch: {
+    websites: (value) => {
+      this.websites = value
+      if (this.websites) {
+        this.createChart()
+      }
+    }
+  }
 }
 </script>
 
