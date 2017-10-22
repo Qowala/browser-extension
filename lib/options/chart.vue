@@ -31,7 +31,6 @@ export default {
             }
           }),
           datasets: this.websites.map(site => {
-            console.log(site)
             const data = {
               type: 'line',
               fill: false,

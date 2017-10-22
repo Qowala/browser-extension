@@ -137,8 +137,6 @@ export default {
   },
   methods: {
     track: async function () {
-      console.log('favicon url :')
-      console.log(this.faviconUrl, this)
       const ws = await Website.fromUrl(this.activeURL, this.faviconUrl)
       ws.isActive() // fake tracking to be sure we display at least "One second spent"
       this.config.websites.push(ws)
@@ -173,7 +171,6 @@ export default {
         this.config.websites = res.config.websites.map(x => new Website(x))
         this.activeURL = tabs[0].url
         this.faviconUrl = tabs[0].favIconUrl
-        console.log(tabs[0])
       })
     })
   }

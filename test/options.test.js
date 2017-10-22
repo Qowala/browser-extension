@@ -1,3 +1,4 @@
+import Website from '../lib/website'
 const assert = require('assert')
 const { describe, it, before, beforeEach } = require('mocha')
 const chrome = require('sinon-chrome')
@@ -7,44 +8,48 @@ describe('Options', function () {
   before(function () {
     // Mock chrome with sinon.chrome in order to simulate the browser API
     global.chrome = chrome
+    global.URL = require('url').URL
     // Load the code to test
     this.options = mount(require('../lib/options/options.vue'))
+    this.twitterWebsite = new Website({
+      url: 'twitter.com'
+    })
   })
 
   beforeEach(function () {
-    this.options.blacklist = [ 'twitter.com' ]
+    this.options.websites = [ this.twitterWebsite ]
   })
 
   describe('addWebsite', function () {
-    it('should add a website to the blacklist', function () {
+    it('should add a website to the blacklist', async function () {
       this.options.websiteInput = 'facebook.com'
-      this.options.addWebsite()
-      assert.deepEqual(this.options.blacklist, [
-        'facebook.com',
-        'twitter.com'
+      await this.options.addWebsite()
+      assert.deepEqual(this.options.websites.map(x => x.url), [
+        'https://facebook.com',
+        'https://twitter.com'
       ])
     })
 
-    it('should convert hostname without www subdomain', function () {
+    it('should convert hostname without www subdomain', async function () {
       this.options.websiteInput = 'www.facebook.com'
-      this.options.addWebsite()
-      assert.deepEqual(this.options.blacklist, [
-        'facebook.com',
-        'twitter.com'
+      await this.options.addWebsite()
+      assert.deepEqual(this.options.websites.map(x => x.url), [
+        'https://facebook.com',
+        'https://twitter.com'
       ])
     })
 
     it('should not add the website if it is already here', function () {
       this.options.websiteInput = 'twitter.com'
       this.options.addWebsite()
-      assert.deepEqual(this.options.blacklist, [
-        'twitter.com'
+      assert.deepEqual(this.options.websites.map(x => x.url), [
+        'https://twitter.com'
       ])
 
       this.options.websiteInput = 'www.twitter.com'
       this.options.addWebsite()
-      assert.deepEqual(this.options.blacklist, [
-        'twitter.com'
+      assert.deepEqual(this.options.websites.map(x => x.url), [
+        'https://twitter.com'
       ])
     })
   })
@@ -68,8 +73,8 @@ describe('Options', function () {
 
   describe('remove', function () {
     it('should remove a given website', function () {
-      this.options.remove('twitter.com')
-      assert.deepEqual(this.options.blacklist, [])
+      this.options.remove(this.twitterWebsite)
+      assert.deepEqual(this.options.websites, [])
     })
   })
 })
