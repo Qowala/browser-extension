@@ -55,9 +55,9 @@ export default {
     }
   },
   methods: {
-    addWebsite: function () {
+    addWebsite: async function () {
       if (!this.error && !this.websites.some(x => x.hostname === this.hostname)) {
-        this.websites.unshift(Website.fromUrl(this.hostname))
+        this.websites.unshift(await Website.fromUrl(this.hostname, `${this.hostname}/favicon.ico`))
         chrome.storage.local.set({ config: { websites: this.websites } })
         this.websiteInput = ''
       }

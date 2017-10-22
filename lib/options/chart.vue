@@ -4,7 +4,8 @@
 
 <script>
 import Chart from 'chart'
-import { lastSevenDays } from '../utils'
+import { format } from 'date-fns'
+import { today, yesterday, lastSevenDays, formatTime } from '../utils'
 
 export default {
   data () {
@@ -17,7 +18,16 @@ export default {
       return new Chart(this.$refs.canvas, {
         type: 'line',
         data: {
-          labels: [ '7d', '6d', '5d', '4d', '3d', 'Yesterday', 'Today' ],
+          labels: lastSevenDays().map(d => {
+            switch (d) {
+              case today():
+                return 'Today'
+              case yesterday():
+                return 'Yesterday'
+              default:
+                return format(d, 'ddd D MMM')
+            }
+          }),
           datasets: this.websites.map(site => {
             console.log(site)
             const data = {
@@ -30,6 +40,16 @@ export default {
             }
             return data.data ? data : null
           }).filter(x => x !== null)
+        },
+        options: {
+          tooltips: {
+            displayColors: false,
+            callbacks: {
+              label: function (tooltip, data) {
+                return formatTime(tooltip.y)
+              }
+            }
+          }
         }
       })
     },
