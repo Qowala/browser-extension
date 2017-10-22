@@ -47,8 +47,11 @@ export default {
           tooltips: {
             displayColors: false,
             callbacks: {
+              title: function (tooltipItem, data) {
+                return data.datasets[tooltipItem.datasetIndex].label || ''
+              },
               label: function (tooltip, data) {
-                return formatTime(tooltip.y)
+                return formatTime(Number.parseInt(tooltip.yLabel))
               }
             }
           }
