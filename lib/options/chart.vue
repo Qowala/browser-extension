@@ -1,5 +1,7 @@
 <template lang="html">
-  <canvas ref="canvas" width="1000" height="250"></canvas>
+  <div style="position: relative;">
+    <canvas ref="canvas"></canvas>
+  </div>
 </template>
 
 <script>

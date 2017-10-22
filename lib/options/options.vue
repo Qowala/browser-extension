@@ -1,33 +1,38 @@
 <template lang="html">
   <main>
-    <img src="../assets/logo.png" alt="Qowala">
-    <div class="card">
-      <h1>Settings</h1>
-      <h3>Add a website to track</h3>
-      <p>You can add a social network to track the time you spend on it.</p>
-      <transition name="fade">
-        <p v-if="error" id="error">
-          Please enter a valid domain name, like <code>example.org</code>.
-        </p>
-      </transition>
-      <form v-on:submit.prevent="addWebsite">
-        <input v-model.lazy="websiteInput" type="text" id="website" autocomplete="url" />
-        <button class="btn primary" type="submit">Add</button>
-      </form>
-      <ul id="blacklist">
-        <transition-group name="fade">
-          <li v-for="site in websites" v-bind:key="site">
-            <span class="hostname">{{ site.name }}</span>
-            <span class="delete-icon" v-on:click="remove(site)">×</span>
-          </li>
-        </transition-group>
-      </ul>
-    </div>
-    <div class="card">
-      <h1>Statistics</h1>
-      <h3>How did you spent your time?</h3>
-      <p>See how you spent your time on the websites you added to your Qowala list.</p>
-      <chart :websites="websites"></chart>
+    <header>
+      <img src="../assets/logo-white.png" alt="Qowala">
+      <h2>Qowala</h2>
+    </header>
+    <div class="content">
+      <aside>
+        <h1>Tracked websites</h1>
+        <transition name="fade">
+          <p v-if="error" id="error">
+            Please enter a valid domain name, like <code>example.org</code>.
+          </p>
+        </transition>
+        <form v-on:submit.prevent="addWebsite">
+          <input v-model.lazy="websiteInput" type="text" id="website" autocomplete="url" />
+          <button class="btn primary" type="submit">Add</button>
+        </form>
+        <ul id="blacklist">
+          <transition-group name="fade">
+            <li v-for="site in websites" v-bind:key="site" :title="site.hostname">
+              <img :src="site.faviconUrl" :alt="site.name[0]" class="favicon">
+              <span class="hostname">{{ site.name }}</span>
+              <span class="delete-icon" v-on:click="remove(site)">×</span>
+            </li>
+          </transition-group>
+        </ul>
+      </aside>
+      <main>
+        <div class="card">
+          <h1>How do I spend my time?</h1>
+          <p class="desc">See how you spent your time on the websites you added to your Qowala list.</p>
+          <chart :websites="websites"></chart>
+        </div>
+      </main>
     </div>
   </main>
 </template>
@@ -91,13 +96,46 @@ $secondary: $light-gray;
 
 body {
   font-family: $font-stack;
-  padding: 50px 10%;
+  background: #E5E5E5;
 }
 
-img {
-  display: block;
-  width: 20%;
-  margin: 0px auto;
+header {
+  background: $primary;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: fixed;
+  max-height: 110px;
+  z-index: 1;
+  top: 0px;
+
+  h2 {
+    margin: auto 20px;
+    font-weight: lighter;
+    color: white;
+    font-family: 'Roboto', $font-stack;
+  }
+
+  img {
+    max-width: 40px;
+    max-height: 40px
+  }
+}
+
+.content {
+  margin-top: 150px;
+  display: flex;
+
+  main {
+    padding: 40px;
+    flex-grow: 1;
+  }
+}
+
+h1, h2, h2, h3 {
+  color: #4F4F4F;
 }
 
 h1 {
@@ -115,6 +153,23 @@ p {
   color: $gray;
 }
 
+aside {
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  box-shadow: 0px 6px 34px rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  padding: 20px;
+}
+
+.desc {
+  color: $primary;
+  font-weight: lighter;
+  font-style: italic;
+}
+
 form {
   display: flex;
 }
@@ -124,11 +179,10 @@ ul {
 
   li {
     font-family: 'Roboto';
-    padding: 5px 0px;
     display: flex;
     align-items: center;
     transition: all .5s;
-    padding: 10px;
+    padding: 5px;
     border-radius: 2px;
 
     &:hover {
@@ -144,6 +198,16 @@ ul {
       padding: 5px;
     }
   }
+}
+
+.favicon {
+  width: 20px;
+  height: 20px;
+  margin: 10px;
+
+  // style for the alt text
+  color: $primary;
+  text-align: center;
 }
 
 #error {
