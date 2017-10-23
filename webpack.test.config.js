@@ -10,7 +10,6 @@ config.output = {
   publicPath: '/build/tests',
   filename: '[name].js'
 }
-config.target = 'node'
 config.externals = [ nodeExternals() ]
 config.plugins = []
 
