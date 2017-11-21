@@ -21,6 +21,7 @@
             <li v-for="site in websites" v-bind:key="site" :title="site.hostname">
               <img :src="site.faviconUrl" :alt="site.name[0]" class="favicon">
               <span class="hostname">{{ site.name }}</span>
+              <span title="Hide or show it on the chart" :class="getClasses(site)" :style="getStyle(site)" v-on:click="toggle(site)"></span>
               <span class="delete-icon" v-on:click="remove(site)">×</span>
             </li>
           </transition-group>
@@ -30,7 +31,7 @@
         <div class="card">
           <h1>How do I spend my time?</h1>
           <p class="desc">See how you spent your time on the websites you added to your Qowala list.</p>
-          <chart :websites="websites"></chart>
+          <chart :disabledDomains="disabledDomains" :websites="websites"></chart>
         </div>
       </main>
     </div>
@@ -47,6 +48,7 @@ const urlRegex = /[a-z0-9.-]+\.[a-z]+/
 export default {
   data () {
     return {
+      disabledDomains: [],
       websites: [],
       websiteInput: ''
     }
@@ -60,6 +62,19 @@ export default {
     }
   },
   methods: {
+    getClasses: function (site) {
+      return [ 'show', this.disabledDomains.includes(site.hostname) ? 'off' : 'on' ].join(' ')
+    },
+    getStyle: function (site) {
+      return { 'borderColor': site.color }
+    },
+    toggle: function (site) {
+      if (this.disabledDomains.includes(site.hostname)) {
+        this.disabledDomains = this.disabledDomains.filter(x => x !== site.hostname)
+      } else {
+        this.disabledDomains.push(site.hostname)
+      }
+    },
     addWebsite: async function () {
       if (!this.error && !this.websites.some(x => x.hostname === this.hostname)) {
         this.websites.unshift(await Website.fromUrl(this.hostname, `${this.hostname}/favicon.ico`))
@@ -194,6 +209,26 @@ ul {
     span.delete-icon {
       cursor: pointer;
       padding: 5px;
+    }
+
+    span.show {
+      margin-right: 8px;
+      transition: all 0.1s ease-in;
+      cursor: pointer;
+      width: 12px;
+      height: 12px;
+      border-radius: 100%;
+      border-width: 4px;
+      border-style: solid;
+      box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+
+      &.off {
+        opacity: 0.5;
+      }
+
+      &:hover {
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+      }
     }
   }
 }

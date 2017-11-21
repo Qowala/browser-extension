@@ -30,19 +30,19 @@ export default {
                 return format(d, 'ddd D MMM')
             }
           }),
-          datasets: this.websites.map(site => {
-            const data = {
-              type: 'line',
-              fill: false,
-              label: `Time spent on ${site.name}`,
-              data: this.genData(site),
-              borderColor: site.color,
-              backgroundColor: site.color
-            }
-            return data.data ? data : null
-          }).filter(x => x !== null)
+          datasets: this.websites.filter(x => !this.disabledDomains.includes(x.hostname)).map(site => ({
+            type: 'line',
+            fill: false,
+            label: `Time spent on ${site.name}`,
+            data: this.genData(site),
+            borderColor: site.color,
+            backgroundColor: site.color
+          })).filter(x => x.data && true)
         },
         options: {
+          legend: {
+            display: false
+          },
           tooltips: {
             displayColors: false,
             callbacks: {
@@ -62,10 +62,22 @@ export default {
       return res.filter(x => x !== 0).length ? res : null
     }
   },
-  props: [ 'websites' ],
+  props: {
+    websites: Array,
+    disabledDomains: {
+      type: Array,
+      default: []
+    }
+  },
   watch: {
     websites: function (value) {
       this.websites = value
+      if (this.websites) {
+        this.createChart()
+      }
+    },
+    disabledDomains: function (value) {
+      this.disabledDomains = value
       if (this.websites) {
         this.createChart()
       }
