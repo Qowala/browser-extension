@@ -96,7 +96,6 @@ $secondary: $light-gray;
 
 body {
   font-family: $font-stack;
-  background: #E5E5E5;
 }
 
 header {
@@ -165,8 +164,7 @@ aside {
 }
 
 .desc {
-  color: $primary;
-  font-weight: lighter;
+  color: $light-green;
   font-style: italic;
 }
 
