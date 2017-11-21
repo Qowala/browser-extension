@@ -38,4 +38,19 @@ describe('Utils', function () {
       assert.deepEqual(inputUrls.map(u => utils.fixUrl(u)), expectedUrls)
     })
   })
+
+  describe('formatTime', function () {
+    it('should return time in hour when the time spent is over an hour', function () {
+      assert.equal(utils.formatTime(3650), '1 hour')
+    })
+    it('should return time in minute when the time spent is over a minute', function () {
+      assert.equal(utils.formatTime(65), '1 minute')
+    })
+    it('should return time in second when the time spent is in seconds', function () {
+      assert.equal(utils.formatTime(1), '1 second')
+    })
+    it('should return time with plural when the time spent has several units', function () {
+      assert.equal(utils.formatTime(5), '5 seconds')
+    })
+  })
 })

@@ -48,21 +48,6 @@ describe('Popup', function () {
     this.popup.config = JSON.parse(JSON.stringify(this.storage.config))
   })
 
-  describe('formatTime', function () {
-    it('should return time in hour when the time spent is over an hour', function () {
-      assert.equal(this.popup.formatTime(3650), '1 hour')
-    })
-    it('should return time in minute when the time spent is over a minute', function () {
-      assert.equal(this.popup.formatTime(65), '1 minute')
-    })
-    it('should return time in second when the time spent is in seconds', function () {
-      assert.equal(this.popup.formatTime(1), '1 second')
-    })
-    it('should return time with plural when the time spent has several units', function () {
-      assert.equal(this.popup.formatTime(5), '5 seconds')
-    })
-  })
-
   describe('percentage', function () {
     it('should correspond to the percentage of time spent on a specific website', function () {
       // We are not computing the real percentage, so let's allow a little difference
