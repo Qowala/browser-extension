@@ -98,7 +98,7 @@ export default {
         res.unshift(this.config.websites.find(w => w.matchUrl(this.activeURL)))
         res.splice(5, 1) // remove another website from the list
       }
-      return res.filter(x => x !== null && x !== undefined)
+      return res.filter(x => x !== null && x !== undefined).filter(x => x.navigationStats[date] > 0)
     },
     timeSpent: function () {
       if (this.dates[this.date]) {
