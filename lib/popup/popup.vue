@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { today, yesterday, fixUrl, cleanUrl } from '../utils'
+import { today, yesterday, fixUrl, cleanUrl, formatTime } from '../utils'
 import Website from '../website'
 
 const TODAY = today()
@@ -105,7 +105,7 @@ export default {
         const ws = this.currentWebsite
 
         if (ws && ws.navigationStats[this.dates[this.date]]) {
-          return this.formatTime(ws.navigationStats[this.dates[this.date]])
+          return formatTime(ws.navigationStats[this.dates[this.date]])
         } else {
           return `You didn't visited this site ${this.date.toLowerCase()}`
         }
@@ -141,28 +141,6 @@ export default {
       ws.isActive() // fake tracking to be sure we display at least "One second spent"
       this.config.websites.push(ws)
       chrome.storage.local.set({ config: this.config })
-    },
-    formatTime: function (time) {
-      let displayTime
-      let displayUnit
-
-      if (time >= 3600) {
-        displayTime = Math.floor(time / 3600)
-        displayUnit = 'hour'
-      } else if (time >= 60) {
-        displayTime = Math.floor(time / 60)
-        displayUnit = 'minute'
-      } else {
-        displayTime = time
-        displayUnit = 'second'
-      }
-
-      // Display plural
-      if (displayTime > 1) {
-        displayUnit = displayUnit + 's'
-      }
-
-      return `${displayTime} ${displayUnit}`
     }
   },
   created: function () {

@@ -7,7 +7,7 @@
 <script>
 import Chart from 'chart'
 import { format } from 'date-fns'
-import { today, yesterday, lastSevenDays, formatTime } from '../utils'
+import { today, yesterday, lastSevenDays, formatTime, formatTimeShort } from '../utils'
 
 export default {
   data () {
@@ -53,6 +53,13 @@ export default {
                 return formatTime(Number.parseInt(tooltip.yLabel))
               }
             }
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                callback: formatTimeShort
+              }
+            }]
           }
         }
       })
