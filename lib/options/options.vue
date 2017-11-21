@@ -149,7 +149,7 @@ h3 {
 }
 
 p {
-  font-family: 'Roboto';
+  font-family: 'Roboto', $font-stack;
   color: $gray;
 }
 
@@ -178,7 +178,7 @@ ul {
   margin-top: 20px;
 
   li {
-    font-family: 'Roboto';
+    font-family: 'Roboto', $font-stack;
     display: flex;
     align-items: center;
     transition: all .5s;
