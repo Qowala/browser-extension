@@ -18,7 +18,7 @@
         </form>
         <ul id="blacklist">
           <transition-group name="fade">
-            <li v-for="site in websites" v-bind:key="site" :title="site.hostname">
+            <li v-for="site in websites" v-bind:key="site" :title="site.hostname" :class="site.hasData() ? '' : 'no-data'">
               <img :src="site.faviconUrl" :alt="site.name[0]" class="favicon">
               <span class="hostname">{{ site.name }}</span>
               <span title="Hide or show it on the chart" :class="getClasses(site)" :style="getStyle(site)" v-on:click="toggle(site)"></span>
@@ -89,7 +89,15 @@ export default {
   },
   created: function () {
     chrome.storage.local.get({ config: { websites: [] } }, result => {
-      this.websites = result.config.websites.map(x => new Website(x))
+      this.websites = result.config.websites.map(x => new Website(x)).sort((a, b) => {
+        if (a.hasData() && !b.hasData()) {
+          return -1
+        } else if (!a.hasData() && b.hasData()) {
+          return 1
+        } else {
+          return 0
+        }
+      })
     })
   },
   components: {
@@ -169,6 +177,10 @@ p {
 
 aside {
   padding: 20px;
+}
+
+.no-data {
+  filter: grayscale(100%);
 }
 
 .card {
