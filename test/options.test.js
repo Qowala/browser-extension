@@ -22,10 +22,10 @@ describe('Options', function () {
 
   describe('addWebsite', function () {
     it('should add a website to the blacklist', async function () {
-      this.options.websiteInput = 'facebook.com'
+      this.options.websiteInput = 'instagram.com'
       await this.options.addWebsite()
       assert.deepEqual(this.options.websites.map(x => x.url), [
-        'https://facebook.com',
+        'https://instagram.com',
         'https://twitter.com'
       ])
     })

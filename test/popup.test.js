@@ -57,17 +57,17 @@ describe('Popup', function () {
 
   describe('track', function () {
     it('should track current website', async function () {
-      this.popup.activeURL = 'https://my-social-network.net'
+      this.popup.activeURL = 'https://instagram.com'
       await this.popup.track()
-      const site = this.popup.config.websites.find(w => w.hostname === 'my-social-network.net')
+      const site = this.popup.config.websites.find(w => w.hostname === 'instagram.com')
       assert.equal(site !== null && site !== undefined, true)
       assert.equal(site.navigationStats[this.dates.Today], 1)
     })
     it('should remove www subdomain from website when it is the case', async function () {
-      this.popup.activeURL = 'https://www.my-social-network.net'
+      this.popup.activeURL = 'https://www.instagram.com'
       await this.popup.track()
-      const site = this.popup.config.websites.find(w => w.hostname === 'my-social-network.net')
-      const wwwSite = this.popup.config.websites.find(w => w.hostname === 'www.my-social-network.net')
+      const site = this.popup.config.websites.find(w => w.hostname === 'instagram.com')
+      const wwwSite = this.popup.config.websites.find(w => w.hostname === 'www.instagram.com')
       assert.equal(site !== null && site !== undefined, true)
       assert.equal(wwwSite === null || wwwSite === undefined, true)
       assert.equal(site.navigationStats[this.dates.Today], 1)
