@@ -68,8 +68,7 @@ export default {
         websites: []
       },
       hostname: '',
-      _activeURL: '',
-      faviconUrl: ''
+      _activeURL: ''
     }
   },
   computed: {
@@ -137,7 +136,7 @@ export default {
   },
   methods: {
     track: async function () {
-      const ws = await Website.fromUrl(this.activeURL, this.faviconUrl)
+      const ws = await Website.fromUrl(this.activeURL)
       ws.isActive() // fake tracking to be sure we display at least "One second spent"
       this.config.websites.push(ws)
       chrome.storage.local.set({ config: this.config })
@@ -148,7 +147,6 @@ export default {
       chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
         this.config.websites = res.config.websites.map(x => new Website(x))
         this.activeURL = tabs[0].url
-        this.faviconUrl = tabs[0].favIconUrl
       })
     })
   }
