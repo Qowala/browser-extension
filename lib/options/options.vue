@@ -117,6 +117,10 @@ $secondary: $light-gray;
 
 @import '../assets/common';
 
+body, html, main, .content {
+  height: 100%;
+}
+
 body {
   font-family: $font-stack;
 }
@@ -147,8 +151,9 @@ header {
 }
 
 .content {
-  margin-top: 150px;
   display: flex;
+  max-width: 1800px;
+  margin: 120px auto;
 
   main {
     padding: 40px;
@@ -177,6 +182,7 @@ p {
 
 aside {
   padding: 20px;
+  height: 60vh;
 }
 
 .no-data {
@@ -201,6 +207,8 @@ form {
 
 ul {
   margin-top: 20px;
+  overflow-y: auto;
+  height: 100%;
 
   li {
     font-family: 'Roboto', $font-stack;
