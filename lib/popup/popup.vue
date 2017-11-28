@@ -15,7 +15,7 @@
         <div class="parameters">
           On
           <select v-model="hostname" class="dropdown network">
-            <option v-for="site in topSites" :value="site">{{ site }}</option>
+            <option v-for="site in topSites" :value="site.hostname">{{ site.name }}</option>
           </select>
           <select v-model="date" class="dropdown date">
             <option v-for="day in validDates" :value="day">{{ day }}</option>
@@ -34,125 +34,120 @@
       </div>
     </div>
     <div class="section" v-else>
-      <p>
-        It looks like this website is not on your list.
-        <br>
-        If it should, you can add it now.
-      </p>
-      <button v-on:click="track" class="btn primary big">Start tracking</button>
+      <div v-if="trackable">
+        <p>
+          It looks like this website ({{ hostname }}) is not on your list.
+          <br>
+          If it should, you can add it now.
+        </p>
+        <button v-on:click="track" class="btn primary big">Start tracking</button>
+      </div>
+      <div v-else>
+        <p>Start browsing to see how you spend your time!</p>
+      </div>
     </div>
   </main>
 </template>
 
 <script>
+import { today, yesterday, fixUrl, cleanUrl, formatTime } from '../utils'
+import Website from '../website'
+
+const TODAY = today()
+const YESTERDAY = yesterday()
+
 export default {
   data () {
     return {
       dates: {
-        'Today': new Date(new Date().setHours(0, 0, 0, 0)),
-        'Yesterday': new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(0, 0, 0, 0))
+        'Today': TODAY,
+        'Yesterday': YESTERDAY
       },
       date: 'Today',
-      config: {},
-      stats: {},
-      activeURL: ''
+      config: {
+        websites: []
+      },
+      hostname: '',
+      _activeURL: ''
     }
   },
   computed: {
-    hostname: {
+    activeURL: {
+      cache: false,
       get: function () {
-        return this.activeURL
+        return this._activeURL || ''
       },
-      set: function (hostname) {
-        // Convert www.example.com domain to simple domain example.com
-        if (hostname.startsWith('www.') && (hostname.match(/\./g) || []).length === 2) {
-          hostname = hostname.substring(4)
-        }
-        this.activeURL = hostname
+      set: function (url) {
+        this._activeURL = url
+        this.hostname = new URL(fixUrl(cleanUrl(url))).hostname
       }
     },
     tracked: function () {
-      return this.config && this.config.blacklist &&
-             this.config.blacklist.includes(this.activeURL)
+      return this.currentWebsite !== null && this.currentWebsite !== undefined
+    },
+    trackable: function () {
+      return !(this.activeURL.startsWith('https://about:') || this.activeURL.startsWith('https://chrome://')) // don't track browser pages
     },
     topSites: function () {
-      const dayStats = this.stats[this.dates[this.date]]
+      const date = this.dates[this.date]
       // We take the five most visited websites, ordered by the time spent on them
-      const res = dayStats ? Object.keys(dayStats).sort((a, b) => dayStats[a] <= dayStats[b]).slice(0, 5) : []
-      if (!res.includes(this.hostname)) {
-        res.unshift(this.hostname)
+      const res = this.config.websites.sort((a, b) => a.navigationStats[date] <= b.navigationStats[date]).slice(0, 5)
+
+      if (!res.some(x => x.matchUrl(this.activeURL))) { // if the current website is not present, still display it in the list
+        res.unshift(this.config.websites.find(w => w.matchUrl(this.activeURL)))
+        res.splice(5, 1) // remove another website from the list
       }
-      return res
+      return res.filter(x => x !== null && x !== undefined).filter(x => x.navigationStats[date] > 0)
     },
     timeSpent: function () {
       if (this.dates[this.date]) {
-        if (this.stats[this.dates[this.date]]) {
-          if (this.stats[this.dates[this.date]][this.hostname]) {
-            return this.formatTime(this.stats[this.dates[this.date]][this.hostname])
-          } else {
-            return `You didn't visited this site ${this.date.toLowerCase()}!`
-          }
+        const ws = this.currentWebsite
+
+        if (ws && ws.navigationStats[this.dates[this.date]]) {
+          return formatTime(ws.navigationStats[this.dates[this.date]])
         } else {
-          return 'No data for this day'
+          return `You didn't visited this site ${this.date.toLowerCase()}`
         }
       } else {
         return 'Invalid date'
       }
     },
     validDates: function () {
-      return Object.keys(this.dates).filter(date => this.stats && this.stats[this.dates[date]])
+      return Object.keys(this.dates).filter(date => {
+        if (this.currentWebsite.navigationStats[this.dates[date]] !== undefined) {
+          return date
+        } else {
+          return null
+        }
+      })
     },
     percentage: function () {
-      let total = 0
-      let currentTime = 0
-      const dayStats = this.stats[this.dates[this.date]]
-      for (const site in dayStats) {
-        total += dayStats[site]
-        if (site === this.hostname) {
-          currentTime = dayStats[site]
-        }
-      }
+      const ws = this.currentWebsite
+      const total = this.config.websites.reduce((s, w) =>
+        s + (w.navigationStats[this.dates[this.date]] ? w.navigationStats[this.dates[this.date]] : 0),
+      1)
+      const currentTime = ws.navigationStats[this.dates[this.date]] + 1
 
       return Math.round((currentTime / total) * 100)
+    },
+    currentWebsite: function () {
+      return this.config.websites.find(x => x.hostname === this.hostname)
     }
   },
   methods: {
-    track: function () {
-      this.config.blacklist.push(this.hostname)
-      this.stats[this.dates.Today][this.hostname] = 1 // "Fake" time to be sure that it will show something after re-rendering
-      chrome.storage.local.set({ hostNavigationStats: this.stats, config: this.config })
-    },
-    formatTime: function (time) {
-      let displayTime
-      let displayUnit
-
-      if (time >= 3600) {
-        displayTime = Math.floor(time / 3600)
-        displayUnit = 'hour'
-      } else if (time >= 60) {
-        displayTime = Math.floor(time / 60)
-        displayUnit = 'minute'
-      } else {
-        displayTime = time
-        displayUnit = 'second'
-      }
-
-      // Display plural
-      if (displayTime > 1) {
-        displayUnit = displayUnit + 's'
-      }
-
-      return `${displayTime} ${displayUnit}`
+    track: async function () {
+      const ws = await Website.fromUrl(this.activeURL)
+      ws.isActive() // fake tracking to be sure we display at least "One second spent"
+      this.config.websites.push(ws)
+      chrome.storage.local.set({ config: this.config })
     }
   },
   created: function () {
-    chrome.storage.local.get({ hostNavigationStats: {}, config: {} }, res => {
-      this.stats = res.hostNavigationStats
-      this.config = res.config
-    })
-
-    chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-      this.hostname = this.activeURL = new URL(tabs[0].url).hostname
+    chrome.storage.local.get({ config: { websites: [] } }, res => {
+      chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+        this.config.websites = res.config.websites.map(x => new Website(x))
+        this.activeURL = tabs[0].url
+      })
     })
   }
 }

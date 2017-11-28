@@ -1,8 +1,22 @@
 @font-face {
   font-family: 'Roboto Bold';
   src: url('../assets/roboto-bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../assets/Roboto-Medium.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
 
-$font-stack: "Roboto Bold", "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+@font-face {
+  font-family: 'Roboto';
+  src: url('../assets/Roboto-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+}
+
+$font-stack: "Roboto Bold", "Roboto", "Segoe UI", "Lucida Grande", Tahoma, sans-serif;

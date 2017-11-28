@@ -1,36 +1,55 @@
 <template lang="html">
   <main>
-    <img src="../assets/logo.png" alt="Qowala">
-    <h1>Settings</h1>
-    <h3>Add a website to track</h3>
-    <p>You can add a social network to track the time you spend on it.</p>
-    <transition name="fade">
-      <p v-if="error" id="error">
-        Please enter a valid domain name, like <code>example.org</code>.
-      </p>
-    </transition>
-    <form v-on:submit.prevent="addWebsite">
-      <input v-model.lazy="websiteInput" type="text" id="website" autocomplete="url" />
-      <button class="btn primary" type="submit">Add</button>
-    </form>
-    <ul id="blacklist">
-      <transition-group name="fade">
-        <li v-for="site in blacklist" v-bind:key="site">
-          <span class="hostname">{{ site }}</span>
-          <span class="delete-icon" v-on:click="remove(site)">×</span>
-        </li>
-      </transition-group>
-    </ul>
+    <header>
+      <img src="../assets/logo-white.png" alt="Qowala">
+      <h2>Qowala</h2>
+    </header>
+    <div class="content">
+      <aside>
+        <h1>Tracked websites</h1>
+        <transition name="fade">
+          <p v-if="error" id="error">
+            Please enter a valid domain name, like <code>example.org</code>.
+          </p>
+        </transition>
+        <form v-on:submit.prevent="addWebsite">
+          <input v-model.lazy="websiteInput" type="text" id="website" autocomplete="url" />
+          <button class="btn primary" type="submit">Add</button>
+        </form>
+        <ul id="blacklist">
+          <transition-group name="fade">
+            <li v-for="site in websites" v-bind:key="site" :title="site.hostname" :class="site.hasData() ? '' : 'no-data'">
+              <img :src="site.faviconUrl" :alt="site.name[0]" class="favicon">
+              <span class="hostname">{{ site.name }}</span>
+              <span title="Hide or show it on the chart" :class="getClasses(site)" :style="getStyle(site)" v-on:click="toggle(site)"></span>
+              <span class="delete-icon" v-on:click="remove(site)">×</span>
+            </li>
+          </transition-group>
+        </ul>
+      </aside>
+      <main>
+        <div class="card">
+          <h1>How do I spend my time?</h1>
+          <p class="desc">See how you spent your time on the websites you added to your Qowala list.</p>
+          <chart :disabledDomains="disabledDomains" :websites="websites"></chart>
+        </div>
+      </main>
+    </div>
   </main>
 </template>
 
 <script>
+import Chart from './chart.vue'
+import Website from '../website'
+import { fixUrl, cleanUrl } from '../utils'
+
 const urlRegex = /[a-z0-9.-]+\.[a-z]+/
 
 export default {
   data () {
     return {
-      blacklist: [],
+      disabledDomains: [],
+      websites: [],
       websiteInput: ''
     }
   },
@@ -39,30 +58,50 @@ export default {
       return this.websiteInput.length && !this.websiteInput.match(urlRegex)
     },
     hostname: function () {
-      let hostname = new URL(`http://${this.websiteInput}`).hostname
-      if (hostname.startsWith('www.') && (hostname.match(/\./g) || []).length === 2) {
-        hostname = hostname.substring(4)
-      }
-      return hostname
+      return new URL(fixUrl(cleanUrl(this.websiteInput))).hostname
     }
   },
   methods: {
-    addWebsite: function () {
-      if (!this.error && !this.blacklist.includes(this.hostname)) {
-        this.blacklist.unshift(this.hostname)
-        chrome.storage.local.set({ config: { blacklist: this.blacklist } })
+    getClasses: function (site) {
+      return [ 'show', this.disabledDomains.includes(site.hostname) ? 'off' : 'on' ].join(' ')
+    },
+    getStyle: function (site) {
+      return { 'borderColor': site.color }
+    },
+    toggle: function (site) {
+      if (this.disabledDomains.includes(site.hostname)) {
+        this.disabledDomains = this.disabledDomains.filter(x => x !== site.hostname)
+      } else {
+        this.disabledDomains.push(site.hostname)
+      }
+    },
+    addWebsite: async function () {
+      if (!this.error && !this.websites.some(x => x.hostname === this.hostname)) {
+        this.websites.unshift(await Website.fromUrl(this.hostname))
+        chrome.storage.local.set({ config: { websites: this.websites } })
         this.websiteInput = ''
       }
     },
-    remove (website) {
-      this.blacklist = this.blacklist.filter(x => x !== website)
-      chrome.storage.local.set({ config: { blacklist: this.blacklist } })
+    remove: function (website) {
+      this.websites = this.websites.filter(x => x !== website)
+      chrome.storage.local.set({ config: { websites: this.websites } })
     }
   },
   created: function () {
-    chrome.storage.local.get('config', result => {
-      this.blacklist = result.config.blacklist
+    chrome.storage.local.get({ config: { websites: [] } }, result => {
+      this.websites = result.config.websites.map(x => new Website(x)).sort((a, b) => {
+        if (a.hasData() && !b.hasData()) {
+          return -1
+        } else if (!a.hasData() && b.hasData()) {
+          return 1
+        } else {
+          return 0
+        }
+      })
     })
+  },
+  components: {
+    Chart
   }
 }
 </script>
@@ -80,13 +119,46 @@ $secondary: $light-gray;
 
 body {
   font-family: $font-stack;
-  padding: 50px 10%;
 }
 
-img {
-  display: block;
-  width: 20%;
-  margin: 0px auto;
+header {
+  background: $primary;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: fixed;
+  max-height: 110px;
+  z-index: 1;
+  top: 0px;
+
+  h2 {
+    margin: auto 20px;
+    font-weight: lighter;
+    color: white;
+    font-family: 'Roboto', $font-stack;
+  }
+
+  img {
+    max-width: 40px;
+    max-height: 40px
+  }
+}
+
+.content {
+  display: flex;
+  max-width: 1800px;
+  margin: 120px auto;
+
+  main {
+    padding: 40px;
+    flex-grow: 1;
+  }
+}
+
+h1, h2, h2, h3 {
+  color: #4F4F4F;
 }
 
 h1 {
@@ -100,8 +172,29 @@ h3 {
 }
 
 p {
-  font-family: 'Roboto';
+  font-family: 'Roboto', $font-stack;
   color: $gray;
+}
+
+aside {
+  padding: 20px;
+  height: 60vh;
+}
+
+.no-data {
+  filter: grayscale(100%);
+}
+
+.card {
+  background: white;
+  box-shadow: 0px 6px 34px rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  padding: 20px;
+}
+
+.desc {
+  color: $light-green;
+  font-style: italic;
 }
 
 form {
@@ -110,14 +203,15 @@ form {
 
 ul {
   margin-top: 20px;
+  overflow-y: auto;
+  height: 100%;
 
   li {
-    font-family: 'Roboto';
-    padding: 5px 0px;
+    font-family: 'Roboto', $font-stack;
     display: flex;
     align-items: center;
     transition: all .5s;
-    padding: 10px;
+    padding: 5px;
     border-radius: 2px;
 
     &:hover {
@@ -132,7 +226,37 @@ ul {
       cursor: pointer;
       padding: 5px;
     }
+
+    span.show {
+      margin-right: 8px;
+      transition: all 0.1s ease-in;
+      cursor: pointer;
+      width: 12px;
+      height: 12px;
+      border-radius: 100%;
+      border-width: 4px;
+      border-style: solid;
+      box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
+
+      &.off {
+        opacity: 0.5;
+      }
+
+      &:hover {
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+      }
+    }
   }
+}
+
+.favicon {
+  width: 20px;
+  height: 20px;
+  margin: 10px;
+
+  // style for the alt text
+  color: $primary;
+  text-align: center;
 }
 
 #error {

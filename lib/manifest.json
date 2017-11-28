@@ -20,7 +20,10 @@
     "activeTab",
     "tabs",
     "webNavigation",
-    "storage"
+    "storage",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>"
   ],
   "background": {
     "scripts": [

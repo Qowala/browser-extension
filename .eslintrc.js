@@ -1,13 +1,18 @@
 module.exports = {
-    "extends": "standard",
-    "plugins": [
-        "standard",
-        "promise"
+    extends: 'standard',
+    plugins: [
+      'html',
+      'standard',
+      'promise'
     ],
     env: {
       browser: true
     },
     globals: {
-      chrome: false
+      chrome: false,
+      browser: false
+    },
+    settings: {
+      'html/html-extensions': [ '.html', '.vue' ]
     }
 };
