@@ -31,6 +31,7 @@
           <span class="text primary">{{ percentage }}%</span> of your total
           time spent on social networks <span class="text primary">{{ date.toLowerCase() }}</span>
         </p>
+        <button v-on:click="seeStats" class="btn primary big">See my stats</button>
       </div>
     </div>
     <div class="section" v-else>
@@ -140,6 +141,12 @@ export default {
       ws.isActive() // fake tracking to be sure we display at least "One second spent"
       this.config.websites.push(ws)
       chrome.storage.local.set({ config: this.config })
+    },
+    seeStats: function () {
+      const opening = browser.runtime.openOptionsPage()
+      opening.catch((error) => {
+        console.log(`Error: ${error}`)
+      })
     }
   },
   created: function () {
