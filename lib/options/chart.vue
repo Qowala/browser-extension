@@ -1,5 +1,5 @@
 <template lang="html">
-  <div style="position: relative;">
+  <div style="position: relative; height: 40vh; width: 100%;">
     <canvas ref="canvas"></canvas>
   </div>
 </template>
@@ -40,6 +40,7 @@ export default {
           })).filter(x => x.data && true)
         },
         options: {
+          maintainAspectRatio: false,
           legend: {
             display: false
           },
