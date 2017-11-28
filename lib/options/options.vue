@@ -117,10 +117,6 @@ $secondary: $light-gray;
 
 @import '../assets/common';
 
-body, html, main, .content {
-  height: 100%;
-}
-
 body {
   font-family: $font-stack;
 }
