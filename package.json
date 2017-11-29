@@ -2,10 +2,8 @@
   "name": "Qowala-browser-plugin",
   "private": "true",
   "dependencies": {
-    "blob-to-buffer": "^1.2.6",
     "chart.js": "^2.6.0",
     "date-fns": "^1.29.0",
-    "get-pixels": "^3.3.0",
     "node-vibrant": "^3.0.0-alpha.2",
     "vue": "^2.3.3"
   },
