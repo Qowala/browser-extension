@@ -22,10 +22,26 @@ If the default websites we added don't suits you, feel free to edit the websites
 
 You think some features should be added? You see some bug? Feel free to contribute!
 
+### Creating issues
+
+If something is wrong or could be improved, let us know by creating
+[a new issue](https://github.com/Qowala/browser-extension/issues/new). Be sure to clearly describe your
+problem, and we will find a solution.
+
 ### Implementing features and solving bugs
 
-We advice you to use `web-ext` if you want to write some code. Install it with `npm install -g web-ext`.
-Then, to test the extension with auto-reloading, run `web-ext run`.
+If you know JavaScript, HTML or Sass (or both), you can also help by writing code.
+
+First of all, fork this repository and `git clone` your fork on your machine. Then be sure you have
+[yarn installed](https://yarnpkg.com/fr/docs/install/).
+
+Then run `yarn` to install dependencies, create a new branch for your changes, and start coding!
+Once you think your work is finished, push your changes and open a pull request. We will review it,
+and merge it if there are no changes needed.
+
+To test your changes, use `yarn run start`. A new Firefox window will open, with the extension loaded.
+
+Also make sure to write tests if you implement new features, and to check everything works fine with `yarn run test`.
 
 ## Contributors
 
