@@ -40,17 +40,41 @@ describe('Utils', function () {
   })
 
   describe('formatTime', function () {
-    it('should return time in hour when the time spent is over an hour', function () {
-      assert.equal(utils.formatTime(3650), '1 hour')
+    it('should show seconds if under one minute', function () {
+      assert.equal(utils.formatTime(30), '30 seconds')
     })
-    it('should return time in minute when the time spent is over a minute', function () {
-      assert.equal(utils.formatTime(65), '1 minute')
+
+    it('should not show seconds if over one minute', function () {
+      assert.equal(utils.formatTime(60), '1 minute')
     })
-    it('should return time in second when the time spent is in seconds', function () {
+
+    it('should show minutes and hours if over one hour', function () {
+      assert.equal(utils.formatTime(3600 + 120), '1 hour and 2 minutes')
+    })
+
+    it('should pluralize words correctly', function () {
       assert.equal(utils.formatTime(1), '1 second')
+      assert.equal(utils.formatTime(2), '2 seconds')
+
+      assert.equal(utils.formatTime(60), '1 minute')
+      assert.equal(utils.formatTime(120), '2 minutes')
+
+      assert.equal(utils.formatTime(3600), '1 hour')
+      assert.equal(utils.formatTime(7200), '2 hours')
     })
-    it('should return time with plural when the time spent has several units', function () {
-      assert.equal(utils.formatTime(5), '5 seconds')
+
+    describe('short', function () {
+      it('should show seconds if under one minute', function () {
+        assert.equal(utils.formatTime(30, false), '30s')
+      })
+
+      it('should not show seconds if over one minute', function () {
+        assert.equal(utils.formatTime(60, false), '1m')
+      })
+
+      it('should show minutes and hours if over one hour', function () {
+        assert.equal(utils.formatTime(3600 + 120, false), '1h2m')
+      })
     })
   })
 })
