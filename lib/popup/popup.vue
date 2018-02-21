@@ -143,7 +143,7 @@ export default {
       chrome.storage.local.set({ config: this.config })
     },
     seeStats: function () {
-      const opening = browser.runtime.openOptionsPage()
+      const opening = chrome.runtime.openOptionsPage()
       opening.catch((error) => {
         console.log(`Error: ${error}`)
       })
