@@ -6,8 +6,7 @@ Do you know how much time you spend on social networks? This plugin will help yo
 Simply add the Qowala plugin to your browser and it will display the time you spent.
 
 Available for [Firefox](https://addons.mozilla.org/en-us/firefox/addon/qowala/)
-
-Compatible with Chrome but currently not available on the Chrome Store. So you need to install it manually.
+Available for [Chrome](https://chrome.google.com/webstore/detail/qowala/glkhfabbdeifnmjmflppepimimikgbog?hl=en-US)
 
 This plugin browser is part of the Qowala project which aims to help you have a better 2.0 life.
 We think you should be able to master your tools and not be mastered by them. So, use social networks wisely and do not forget to get some fresh air!
